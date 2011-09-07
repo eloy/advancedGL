@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="finreport" type="finreportType"/>
+  <xs:complexType name="lineType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="text"/>
+      <xs:element type="xs:boolean" name="bold"/>
+      <xs:element type="xs:int" name="identation"/>
+      <xs:element type="xs:string" name="id"/>
+      <xs:element type="xs:string" name="account" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pageType">
+    <xs:sequence>
+      <xs:element type="lineType" name="line" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="finreportType">
+    <xs:sequence>
+      <xs:element type="pageType" name="page" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

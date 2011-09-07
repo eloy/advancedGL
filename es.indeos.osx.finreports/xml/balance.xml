@@ -1,0 +1,801 @@
+<finreport>
+ <page>
+  <line>
+   <text>A) ACTIVO NO CORRIENTE</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>I. Inmovilizado intangible.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>20</account>
+   <account>(280)</account>
+   <account>(290)</account>
+  </line>
+  <line>
+   <text>II. Inmovilizado material.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>21</account>
+   <account>(281)</account>
+   <account>(291)</account>
+   <account>23</account>
+  </line>
+  <line>
+   <text>III. Inversiones inmobiliarias.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>22</account>
+   <account>(282)</account>
+   <account>(292)</account>
+  </line>
+  <line>
+   <text>IV. Inversiones en empresas del</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>2403</account>
+   <account>2404</account>
+   <account>2413</account>
+   <account>2414</account>
+   <account>2423</account>
+   <account>2424</account>
+   <account> (2493)</account>
+   <account>(2494)</account>
+   <account>(2933)</account>
+  </line>
+  <line>
+   <text>grupo y asociadas a largo plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(2934)</account>
+   <account>(2943)</account>
+   <account>(2944)</account>
+   <account>(2953)</account>
+   <account>(2954)</account>
+  </line>
+  <line>
+   <text>V. Inversiones financieras a largo plazo</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>2405</account>
+   <account>2415</account>
+   <account>2425</account>
+   <account> (2495)</account>
+   <account>250</account>
+   <account>251</account>
+   <account>252</account>
+   <account>253</account>
+   <account>254</account>
+   <account> 255</account>
+   <account> 258</account>
+   <account>(259)</account>
+   <account>26</account>
+   <account>(2935)</account>
+   <account>(2945)</account>
+   <account>(2955)</account>
+   <account>(296)</account>
+   <account>(297)</account>
+   <account>(298)</account>
+  </line>
+  <line>
+   <text></text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>VI. Activos por Impuesto diferido.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>474</account>
+  </line>
+  <line>
+   <text>B) ACTIVO CORRIENTE</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>I. Existencias.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>30</account>
+   <account>31</account>
+   <account>32</account>
+   <account>33</account>
+   <account>34</account>
+   <account>35</account>
+   <account>36</account>
+   <account>(39)</account>
+   <account>407</account>
+  </line>
+  <line>
+   <text>II. Deudores comerciales y otras</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>1. Clientes por ventas y</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>430</account>
+   <account>431</account>
+   <account>432</account>
+   <account>433</account>
+   <account>434</account>
+   <account>435</account>
+   <account>436</account>
+   <account> (437)</account>
+   <account>(490)</account>
+   <account>(493)</account>
+  </line>
+  <line>
+   <text>Prestaciones de servicios.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>2. Accionistas (socios) por</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>5580</account>
+  </line>
+  <line>
+   <text>3. Otros deudores.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>44</account>
+   <account>460</account>
+   <account>470</account>
+   <account>471</account>
+   <account>472</account>
+   <account>500</account>
+  </line>
+  <line>
+   <text>III. Inversiones en empresas del grupo y asociadas a corto plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>5303</account>
+   <account>5304</account>
+   <account>5313</account>
+   <account>5314</account>
+   <account>5323</account>
+   <account>5324</account>
+   <account>5333</account>
+   <account>5334</account>
+   <account> 5343</account>
+   <account>5344</account>
+   <account> 5353</account>
+   <account>5354</account>
+   <account>(5393)</account>
+   <account>(5394)</account>
+   <account>5523</account>
+   <account>5524</account>
+   <account>(5933)</account>
+   <account>(5934)</account>
+   <account>(5943)</account>
+   <account>(5944)</account>
+   <account>(5953)</account>
+   <account>(5954)</account>
+  </line>
+  <line>
+   <text>IV. Inversiones financieras a corto plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>5305</account>
+   <account>5315</account>
+   <account>5325</account>
+   <account>5335</account>
+   <account>5345</account>
+   <account>5355</account>
+   <account>(5395)</account>
+   <account>540</account>
+   <account>541 </account>
+   <account>542</account>
+   <account>543</account>
+   <account>545</account>
+   <account>546</account>
+   <account>547</account>
+   <account>548</account>
+   <account>(549)</account>
+   <account>551</account>
+   <account>5525</account>
+   <account>5590</account>
+   <account>565</account>
+   <account>566</account>
+   <account>(5935)</account>
+   <account>(5945)</account>
+   <account>(5955)</account>
+   <account>(596)</account>
+   <account>(597)</account>
+   <account>(598)</account>
+  </line>
+  <line>
+   <text>V. Periodificaciones a corto plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>480</account>
+   <account>567</account>
+  </line>
+  <line>
+   <text>VI. Efectivo y otros activos líquidos</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>57</account>
+  </line>
+  <line>
+   <text>TOTAL ACTIVO (A + B)</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+ </page>
+ <page>
+  <line>
+   <text>A) PATRIMONIO NETO</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>A-1) Fondos propios.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>I. Capital.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>1. Capital escriturado.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>2. (Capital no exigido).</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>100</account>
+   <account>101</account>
+   <account>102</account>
+  </line>
+  <line>
+   <text>II. Prima de emisión.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(1030)</account>
+   <account> (1040)</account>
+  </line>
+  <line>
+   <text>III. Reservas.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>110</account>
+  </line>
+  <line>
+   <text>IV. (Acciones y participaciones en</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>112</account>
+   <account>113</account>
+   <account>114</account>
+   <account>119</account>
+  </line>
+  <line>
+   <text>V. Resultados de ejercicios anteriores.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>1:108)</account>
+   <account>(109)</account>
+  </line>
+  <line>
+   <text>VI. Otras aportaciones de socios.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>120</account>
+   <account>(121)</account>
+  </line>
+  <line>
+   <text>VII. Resultado del ejercicio.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>118</account>
+  </line>
+  <line>
+   <text>VIII. (Dividendo a cuenta).</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>129</account>
+  </line>
+  <line>
+   <text>A-2) Subvenciones, donaciones y legados</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(557)</account>
+  </line>
+  <line>
+   <text>recibidos.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>B) PASIVO NO CORRIENTE</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>130</account>
+   <account>131</account>
+   <account>132</account>
+  </line>
+  <line>
+   <text>I. Provisiones a largo plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>II. Deudas a largo plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>14</account>
+  </line>
+  <line>
+   <text>1. Deudas con entidades de crédito.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>2. Acreedores por arrendamiento financiero</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>1605</account>
+   <account>170</account>
+  </line>
+  <line>
+   <text>3. Otras deudas a largo plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>1625</account>
+   <account>174</account>
+  </line>
+  <line>
+   <text>III. Deudas con empresas del grupo y asociadas a</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>1615</account>
+   <account>1635</account>
+   <account>171</account>
+   <account>172</account>
+   <account>173</account>
+   <account>175</account>
+   <account>176</account>
+   <account>177</account>
+   <account>179</account>
+   <account>180</account>
+   <account>185</account>
+  </line>
+  <line>
+   <text>IV. Pasivos por impuesto diferido</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>1603</account>
+   <account>1604</account>
+   <account>1613</account>
+   <account>1614</account>
+   <account>1623</account>
+   <account>1624</account>
+   <account>1633</account>
+   <account>1634</account>
+  </line>
+  <line>
+   <text>V. Periodificaciones a largo plazo</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>479</account>
+  </line>
+  <line>
+   <text>C) PASIVO CORRIENTE</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>181</account>
+  </line>
+  <line>
+   <text>I. Provisiones a corto plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>II. Deudas a corto plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>499</account>
+   <account>529</account>
+  </line>
+  <line>
+   <text></text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>I. Deudas con entidades de crédito.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>2. Acreedores por arrendamiento financiero</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>5105</account>
+   <account>520</account>
+   <account>527</account>
+  </line>
+  <line>
+   <text>3. Otras deudas a corto plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>5125</account>
+   <account>524</account>
+  </line>
+  <line>
+   <text></text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(1034)</account>
+   <account>(1044)</account>
+   <account>(190)</account>
+   <account>(192)</account>
+   <account>194</account>
+   <account>500</account>
+   <account>505</account>
+   <account>506</account>
+   <account>509</account>
+   <account>5115</account>
+   <account>5135</account>
+   <account>5145</account>
+   <account>521</account>
+   <account>522 523</account>
+  </line>
+  <line>
+   <text>III. Deudas con empresas del grupo y asociadas a</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>525</account>
+   <account>526</account>
+   <account>528</account>
+   <account>551</account>
+   <account>5525</account>
+   <account> 555</account>
+   <account>5565</account>
+   <account>5566</account>
+   <account>5595</account>
+   <account>560</account>
+   <account>561</account>
+  </line>
+  <line>
+   <text>IV. Acreedores comerciales y otras cuentas a</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>5103</account>
+   <account>51 04</account>
+   <account>5113</account>
+   <account>5114</account>
+   <account>5123</account>
+   <account>5124</account>
+   <account>5133</account>
+   <account>5134</account>
+   <account>5143</account>
+   <account>5144</account>
+   <account>5523</account>
+   <account>5524</account>
+   <account>5563</account>
+   <account>5564</account>
+  </line>
+  <line>
+   <text>I. Proveedores.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>2. Otros acreedores.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>400</account>
+   <account>401</account>
+   <account>403</account>
+   <account>404</account>
+   <account>405</account>
+   <account>(406)</account>
+  </line>
+  <line>
+   <text>V. Periodificaciones a corto plazo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>41</account>
+   <account>438</account>
+   <account>465</account>
+   <account>475</account>
+   <account>476</account>
+   <account>500</account>
+  </line>
+  <line>
+   <text>TOTAL PATRIMONIO NETO Y PASIVO (A + B + C)</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>485</account>
+   <account>568</account>
+  </line>
+ </page>
+ <page>
+  <line>
+   <text>1. Importe neto de la cifra de negocios.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>2. Variacion de existencias de productos terminados y en curso de fabricación.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>700</account>
+   <account>701</account>
+   <account>702</account>
+   <account>703</account>
+   <account>704</account>
+   <account> 705</account>
+   <account>(706)</account>
+   <account>(708)</account>
+   <account>(709)</account>
+  </line>
+  <line>
+   <text>3. Trabajos realizados por la empresa para su activo.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(6930)</account>
+   <account>71*</account>
+   <account>7930</account>
+  </line>
+  <line>
+   <text>4. Aprovisionamientos.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>73</account>
+  </line>
+  <line>
+   <text>5. Otros ingresos de explotación.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(600)</account>
+   <account>(601)</account>
+   <account>(602)</account>
+   <account>606</account>
+   <account>(607)</account>
+   <account>608</account>
+   <account>609</account>
+   <account>61*</account>
+   <account>(6931)</account>
+   <account>(6932)</account>
+   <account>(6933)</account>
+   <account>7931</account>
+   <account>7932</account>
+   <account>7933</account>
+  </line>
+  <line>
+   <text>6. Gastos de personal.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>740</account>
+   <account>747</account>
+   <account>75</account>
+  </line>
+  <line>
+   <text>7. Otros gastos de explotación.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>64</account>
+  </line>
+  <line>
+   <text>8. Amortización del inmovilizado.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(62)</account>
+   <account>(631)</account>
+   <account>(634)</account>
+   <account>636</account>
+   <account>639</account>
+   <account>(65)</account>
+   <account>(694)</account>
+   <account>(695)</account>
+   <account>794</account>
+   <account> 7954</account>
+  </line>
+  <line>
+   <text>9. Imputación de subvenciones de inmovilizado no financiero y otras.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>68</account>
+  </line>
+  <line>
+   <text>10. Excesos de provisiones.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>746</account>
+  </line>
+  <line>
+   <text>11. Deterioro y resultado por enajenaciones del inmovilizado.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>7951</account>
+   <account>7952</account>
+   <account>7955</account>
+  </line>
+  <line>
+   <text>A) RESULTADO DE EXPLOTACION (1+2+3+4+5+6+7+8+9+10+11)</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(670)</account>
+   <account>(671)</account>
+   <account>(672)</account>
+   <account>(690)</account>
+   <account>(691)</account>
+   <account>(692)</account>
+   <account>770</account>
+   <account>771</account>
+   <account>772</account>
+   <account>790</account>
+   <account>791</account>
+   <account>792</account>
+  </line>
+  <line>
+   <text>12. Ingresos financieros.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>13. Gastos financieros.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>760</account>
+   <account>761</account>
+   <account>762</account>
+   <account>769</account>
+  </line>
+  <line>
+   <text>14. Variacion de valor razonable en instrumentos financieros.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(660)</account>
+   <account>(661)</account>
+   <account>(662)</account>
+   <account>(664)</account>
+   <account>(665)</account>
+   <account>(669)</account>
+  </line>
+  <line>
+   <text>15. Diferencias de cambio.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(663)</account>
+   <account>763</account>
+  </line>
+  <line>
+   <text>16. Deterioro y resultado por enajenaciones de instrumentos financieros.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(668)</account>
+   <account>768</account>
+  </line>
+  <line>
+   <text>B) RESULTADO FINANCIERO (12+13+14+15+16 )</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(666)</account>
+   <account>(667)</account>
+   <account>(673)</account>
+   <account>(675)</account>
+   <account>(696)</account>
+   <account>(697)</account>
+   <account>(698)</account>
+   <account>(699)</account>
+   <account>766</account>
+   <account>773</account>
+   <account>775</account>
+   <account>796</account>
+   <account>797</account>
+   <account>798</account>
+   <account>799</account>
+  </line>
+  <line>
+   <text>C) RESULTADO ANTES DE IMPUESTOS (A+B)</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>17. Impuestos sobre beneficios.</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+  </line>
+  <line>
+   <text>D) RESULTADO DEL EJERCICIO (C + 17)</text>
+   <bold>false</bold>
+   <identation>0</identation>
+   <id>line</id>
+   <account>(6300)*</account>
+   <account>6301*</account>
+   <account>(633)</account>
+   <account>638</account>
+  </line>
+ </page>
+</finreport>
