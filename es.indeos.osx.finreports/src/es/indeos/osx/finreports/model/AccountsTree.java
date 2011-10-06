@@ -60,8 +60,11 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.model;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import org.compiere.util.Env;
 
 /**
  * ElementsTree 
@@ -105,12 +108,19 @@ public class AccountsTree <T extends Account> implements Visitable<T> {
 	/**
 	 * Accept a visitor
 	 */
-    public void accept(Visitor<T> visitor) {            	
+    public BigDecimal accept(Visitor<T> visitor) {            	
     	visitor.visitData(this, data);
+    	BigDecimal childs_balance = Env.ZERO;
     	for (AccountsTree<T> child : children) {
             Visitor<T> childVisitor = visitor.visitTree(child);
-            child.accept(childVisitor);
-        }                
+            childs_balance = childs_balance.add(child.accept(childVisitor));
+        }         
+    	if (data == null)	{
+    		return Env.ZERO;
+    	}
+    	data.setChildsBalance(childs_balance);    	
+		return childs_balance.add(data.getBalance());
+    	
     }
     
     /**

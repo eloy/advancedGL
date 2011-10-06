@@ -60,6 +60,8 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.model;
 
+import java.math.BigDecimal;
+
 /**
  * Visitable 
  *
@@ -68,5 +70,5 @@ package es.indeos.osx.finreports.model;
  */
 public interface Visitable<T extends Account> {
 
-    public void accept(Visitor<T> visitor);
+    public BigDecimal accept(Visitor<T> visitor);
 }

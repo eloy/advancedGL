@@ -213,7 +213,12 @@ public class AccountTreeTableModel implements TreeTableModel {
 			return Env.ONE.negate();
 		}
 		case 4: {
-			return acct.getBalance();
+			if (((AccountsTree<Account>) node).getChildCount() == 0)	{
+				return acct.getBalance();
+			}
+			else {
+				return acct.getChildsBalance();
+			}
 		}
 			
 		default:

@@ -85,6 +85,9 @@ public class Account {
 	private List<MFactAcctBalance> facts;
 
 	private List<MElementValue> accounts;
+	
+	private BigDecimal childsBalance = Env.ZERO;
+	
 	/**
 	 * @return the name
 	 */
@@ -98,6 +101,7 @@ public class Account {
 			return Env.ZERO;
 		}
 		BigDecimal balance = Env.ZERO;
+		
 		for (MFactAcctBalance fact:facts)	{
 			balance = balance.add(fact.getBalance());
 		}
@@ -118,6 +122,23 @@ public class Account {
 		}
 		facts.add(fact);
 	}
+
+
+	/**
+	 * @return the childsBalance
+	 */
+	public BigDecimal getChildsBalance() {
+		return childsBalance;
+	}
+
+
+	/**
+	 * @param childsBalance the childsBalance to set
+	 */
+	public void setChildsBalance(BigDecimal childsBalance) {
+		this.childsBalance = childsBalance;
+	}
+	
 	
 		
 }
