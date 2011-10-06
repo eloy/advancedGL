@@ -61,10 +61,7 @@
 package es.indeos.osx.finreports.model;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-
-import org.opensixen.model.MFactAcctBalance;
 
 /**
  * ElementsTree 
@@ -76,20 +73,25 @@ public class AccountsTree <T extends Account> implements Visitable<T> {
 	
 	// NB: LinkedHashSet preserves insertion order
     private final Set<AccountsTree<T>> children = new LinkedHashSet<AccountsTree<T>>();
+
+    // But we need random access to single records
+    private AccountsTree<T>[] children_array;
+    
     private final T data;
+   
 
     /**
      * Return a sorted accounts tree
      * 
-     * Get all data form fact_acct_balance
      * 
      */
-	public static void getElementTree()	{
+	public static AccountsTree<Account> getElementTree()	{
 		AccountsTree<Account> forest = new AccountsTree<Account>(null);									
 	    for (Account element : AccountFactory.get()) {
 	    	forest.child(element);
 	    }
 	    forest.accept(new PrintIndentedVisitor(0));
+	    return forest;
 	}
 	  
 	/**
@@ -103,13 +105,12 @@ public class AccountsTree <T extends Account> implements Visitable<T> {
 	/**
 	 * Accept a visitor
 	 */
-    public void accept(Visitor<T> visitor) {
-        visitor.visitData(this, data);
-
-        for (AccountsTree<T> child : children) {
+    public void accept(Visitor<T> visitor) {            	
+    	visitor.visitData(this, data);
+    	for (AccountsTree<T> child : children) {
             Visitor<T> childVisitor = visitor.visitTree(child);
             child.accept(childVisitor);
-        }
+        }                
     }
     
     /**
@@ -141,6 +142,42 @@ public class AccountsTree <T extends Account> implements Visitable<T> {
         children.add(child);
         return child;
     }
+    
+    
+    public T getData()	{
+    	return data;
+    }
+    
+    public AccountsTree<T> getChild(int index)	{
+    	if (children_array == null)	{
+    		children_array = children.toArray(new AccountsTree[children.size()]);
+    	}
+    	return children_array[index];
+    }
+    
+    public int getChildCount()	{
+    	return children.size();
+    }
+    
+    public int getIndexOfChild(Object parent, Object child) {
+    	int i=0;
+		for (AccountsTree<T> tree:children)	{
+			if (tree == child)	{
+				return i;
+			}
+			i++;
+		}
+		throw new UnsupportedOperationException("Parent don't contain child!");
+	}
+    
+    public String toString()	{
+    	if (data == null)	{
+    		return "";
+    	}
+    	return data.getName();
+    }
+    
+    
 }
 
 /**
