@@ -60,11 +60,15 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.compiere.model.MElementValue;
 import org.compiere.util.Env;
+import org.opensixen.model.MAccount;
+import org.opensixen.model.MFactAcctBalance;
 import org.opensixen.model.POFactory;
 import org.opensixen.model.QParam;
 
@@ -78,8 +82,9 @@ public class Account {
 	
 	private String name;
 	
-	private boolean folder;
+	private List<MFactAcctBalance> facts;
 
+	private List<MElementValue> accounts;
 	/**
 	 * @return the name
 	 */
@@ -87,46 +92,32 @@ public class Account {
 		return name;
 	}
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
+	
+	public BigDecimal getBalance()	{
+		if (facts == null)	{
+			return Env.ZERO;
+		}
+		BigDecimal balance = Env.ZERO;
+		for (MFactAcctBalance fact:facts)	{
+			balance = balance.add(fact.getBalance());
+		}
+		return balance;
 	}
 
-	/**
-	 * @return the folder
-	 */
-	public boolean isFolder() {
-		return folder;
-	}
-
-	/**
-	 * @param folder the folder to set
-	 */
-	public void setFolder(boolean folder) {
-		this.folder = folder;
+	public void addMAccount(MAccount account)	{
+		if (accounts == null)	{
+			accounts = new ArrayList<MElementValue>();
+			name = account.getValue();
+		}
+		accounts.add(account);
 	}
 	
-	/**
-	 * Return Accounts with values
-	 * @return
-	 */
-	public static List<Account> getAccounts()	{
-		QParam[] params = {
-				new QParam(MElementValue.COLUMNNAME_AD_Client_ID, Env.getAD_Client_ID(Env.getCtx()))
-		};
-		String[] order = {"value"};				
-		List<MElementValue> ele = POFactory.getList(Env.getCtx(), MElementValue.class, params, order, null);
-		ArrayList<Account> accounts = new ArrayList<Account>();
-		for (MElementValue element:ele)	{
-			Account acct = new Account();
-			acct.setName(element.getValue());
-			acct.setFolder(element.isSummary());
-			accounts.add(acct);		
+	public void addFact(MFactAcctBalance fact)	{
+		if (facts == null)	{
+			facts = new ArrayList<MFactAcctBalance>();
 		}
-		
-		return accounts;
+		facts.add(fact);
 	}
+	
 		
 }

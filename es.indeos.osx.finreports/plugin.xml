@@ -8,5 +8,12 @@
             value="BalanceJasper">
       </processCall>
    </extension>
+   <extension
+         point="org.opensixen.osgi.interfaces.ICommand">
+      <command
+            class="es.indeos.osx.finreports.model.Tests"
+            name="balance">
+      </command>
+   </extension>
 
 </plugin>

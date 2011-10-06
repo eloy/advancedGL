@@ -61,7 +61,10 @@
 package es.indeos.osx.finreports.model;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+
+import org.opensixen.model.MFactAcctBalance;
 
 /**
  * ElementsTree 
@@ -77,16 +80,18 @@ public class AccountsTree <T extends Account> implements Visitable<T> {
 
     /**
      * Return a sorted accounts tree
+     * 
+     * Get all data form fact_acct_balance
+     * 
      */
 	public static void getElementTree()	{
-		AccountsTree<Account> forest = new AccountsTree<Account>(null);		
-								
-	    for (Account element : Account.getAccounts()) {
+		AccountsTree<Account> forest = new AccountsTree<Account>(null);									
+	    for (Account element : AccountFactory.get()) {
 	    	forest.child(element);
 	    }
 	    forest.accept(new PrintIndentedVisitor(0));
 	}
-	    
+	  
 	/**
 	 * Simple constructor
 	 * @param data
@@ -164,7 +169,7 @@ class PrintIndentedVisitor implements Visitor<Account> {
             System.out.print(" ");
         }
        
-       System.out.println(data.getName());
+       System.out.println(data.getName() + " => " + data.getBalance());
               
     }
 

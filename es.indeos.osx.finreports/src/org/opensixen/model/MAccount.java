@@ -58,114 +58,54 @@
  * lo gobiernan,  GPL 2.0/CDDL 1.0/EPL 1.0.
  *
  * ***** END LICENSE BLOCK ***** */
-package es.indeos.osx.finreports.jasper;
+package org.opensixen.model;
 
-/*
- * Test with
-import es.indeos.osx.finreports.jasper.BalanceDataSource;
-BalanceDataSource ds = new BalanceDataSource();
-result = "ok";
- */
-
-import java.io.File;
-import java.net.URL;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
-import es.indeos.osx.finreports.model.AccountsTree;
-import es.indeos.osx.finreports.model.FinreportDocument;
-import es.indeos.osx.finreports.model.FinreportType;
-import es.indeos.osx.finreports.model.LineType;
-import es.indeos.osx.finreports.model.PageType;
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRField;
+import org.compiere.model.MElementValue;
+import org.compiere.util.Env;
+
+import es.indeos.osx.finreports.model.Account;
 
 /**
- * BalanceDataSource 
+ * MAccount 
  *
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class BalanceDataSource implements JRDataSource{
+public class MAccount extends MElementValue {
 
-	int index = 0;
-	private FinreportType report;
-	private PageType[] pages;
-	private ArrayList<LineType> lines;
-	
-	public BalanceDataSource()	{
-		System.out.println("Creando Data Source");		
-		loadPages();
-		
-		loadAccountTree();
-		
-		System.out.println("Creado.");
+	/**
+	 * @param ctx
+	 * @param C_ElementValue_ID
+	 * @param trxName
+	 */
+	public MAccount(Properties ctx, int C_ElementValue_ID, String trxName) {
+		super(ctx, C_ElementValue_ID, trxName);
 	}
-	
-	private void loadAccountTree()	{
-		AccountsTree.getElementTree();
+
+	/**
+	 * @param ctx
+	 * @param rs
+	 * @param trxName
+	 */
+	public MAccount(Properties ctx, ResultSet rs, String trxName) {
+		super(ctx, rs, trxName);
 	}
-	
 	
 	/**
-	 * Load pages from XML report definition
+	 * Return Accounts with values
+	 * @return
 	 */
-	private void loadPages()	{
-		lines = new ArrayList<LineType>();
-		
-		report = loadReport();
-		pages = report.getPageArray();
-		
-		for (PageType page:pages)	{
-			for (LineType line:page.getLineArray())	{
-				lines.add(line);				
-			}
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSource#getFieldValue(net.sf.jasperreports.engine.JRField)
-	 */
-	@Override
-	public Object getFieldValue(JRField field) throws JRException {
-		String name = field.getName();
-		if (name.equals("text"))	{
-			return lines.get(index).getText();
-		}
-		else if (name.equals("debe"))	{
-			return 0;
-		}
-		else if (name.equals("haber"))	{
-			return 0;
-		}
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSource#next()
-	 */
-	@Override
-	public boolean next() throws JRException {
-		if (index == lines.size() -1)	{
-			return false;
-		}
-		index++;
-		return true;
-	}
-	
-	private FinreportType loadReport()	{
-		try {
-			// URL xmlreport = BundleProxyClassLoader.getSystemResource("xml/balance.xml");
-			String path = "/home/harlock/git/advancedGL/es.indeos.osx.finreports/xml/balance.xml";
-			File f = new File(path);
-			
-			FinreportDocument doc = FinreportDocument.Factory.parse(f);
-			return doc.getFinreport();
-			
-		}catch (Exception e)	{
-			e.printStackTrace();
-			return null;
-		}
+	public static List<MAccount> getAccounts()	{
+		QParam[] params = {
+				new QParam(MAccount.COLUMNNAME_AD_Client_ID, Env.getAD_Client_ID(Env.getCtx()))
+		};
+		String[] order = {"value"};				
+		return POFactory.getList(Env.getCtx(), MAccount.class, params, order, null);				
 	}
 
 }

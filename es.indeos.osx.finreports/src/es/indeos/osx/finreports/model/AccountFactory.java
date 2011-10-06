@@ -58,114 +58,103 @@
  * lo gobiernan,  GPL 2.0/CDDL 1.0/EPL 1.0.
  *
  * ***** END LICENSE BLOCK ***** */
-package es.indeos.osx.finreports.jasper;
+package es.indeos.osx.finreports.model;
 
-/*
- * Test with
-import es.indeos.osx.finreports.jasper.BalanceDataSource;
-BalanceDataSource ds = new BalanceDataSource();
-result = "ok";
- */
-
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import es.indeos.osx.finreports.model.AccountsTree;
-import es.indeos.osx.finreports.model.FinreportDocument;
-import es.indeos.osx.finreports.model.FinreportType;
-import es.indeos.osx.finreports.model.LineType;
-import es.indeos.osx.finreports.model.PageType;
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRField;
+import org.opensixen.model.MAccount;
+import org.opensixen.model.MFactAcctBalance;
 
 /**
- * BalanceDataSource 
+ * AccountFactory 
  *
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class BalanceDataSource implements JRDataSource{
+public class AccountFactory {
 
-	int index = 0;
-	private FinreportType report;
-	private PageType[] pages;
-	private ArrayList<LineType> lines;
-	
-	public BalanceDataSource()	{
-		System.out.println("Creando Data Source");		
-		loadPages();
+	public static Collection<Account> get()	{
+		Date start = new Date();
+		AccountFactory factory = new AccountFactory();
+		factory.load();
+		factory.loadFacts();
+		long diff = new Date().getTime() - start.getTime();
+		System.out.println("Tiempo empleado: " + diff);
 		
-		loadAccountTree();
-		
-		System.out.println("Creado.");
-	}
-	
-	private void loadAccountTree()	{
-		AccountsTree.getElementTree();
+		return factory.getSorted();
 	}
 	
 	
-	/**
-	 * Load pages from XML report definition
-	 */
-	private void loadPages()	{
-		lines = new ArrayList<LineType>();
-		
-		report = loadReport();
-		pages = report.getPageArray();
-		
-		for (PageType page:pages)	{
-			for (LineType line:page.getLineArray())	{
-				lines.add(line);				
+	private HashMap<String, Account> cache;
+	private List<MAccount> m_accounts;
+	
+	private AccountFactory()	{			
+	}
+	
+	private void load()	{		
+		// Init caches
+		cache = new HashMap<String, Account>();
+		// Load accounts
+		m_accounts = MAccount.getAccounts();					
+		for(MAccount m_acct:m_accounts)	{
+			Account acct = cache.get(m_acct.getValue());
+			if (acct == null)	{
+				acct = new Account();
+				acct.addMAccount(m_acct);				
+				cache.put(m_acct.getValue(), acct);				
+			}
+			else {
+				acct.addMAccount(m_acct);
 			}
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSource#getFieldValue(net.sf.jasperreports.engine.JRField)
+	/**
+	 * Load facts and insert into account representation
 	 */
-	@Override
-	public Object getFieldValue(JRField field) throws JRException {
-		String name = field.getName();
-		if (name.equals("text"))	{
-			return lines.get(index).getText();
+	private void loadFacts()	{
+		// and facts	
+		List<MFactAcctBalance> facts = MFactAcctBalance.getFacts();
+		for(MFactAcctBalance m_fact:facts)	{
+			String name = getAcctName(m_fact.getAccount_ID());
+			Account acct = cache.get(name);
+			if (acct == null)	{
+				throw new UnsupportedOperationException("Account with value=" + name + " not found." );	
+			}
+			acct.addFact(m_fact);
 		}
-		else if (name.equals("debe"))	{
-			return 0;
-		}
-		else if (name.equals("haber"))	{
-			return 0;
-		}
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSource#next()
-	 */
-	@Override
-	public boolean next() throws JRException {
-		if (index == lines.size() -1)	{
-			return false;
-		}
-		index++;
-		return true;
 	}
 	
-	private FinreportType loadReport()	{
-		try {
-			// URL xmlreport = BundleProxyClassLoader.getSystemResource("xml/balance.xml");
-			String path = "/home/harlock/git/advancedGL/es.indeos.osx.finreports/xml/balance.xml";
-			File f = new File(path);
-			
-			FinreportDocument doc = FinreportDocument.Factory.parse(f);
-			return doc.getFinreport();
-			
-		}catch (Exception e)	{
-			e.printStackTrace();
-			return null;
+	/**
+	 * Return the name of the account with this id
+	 * @param id
+	 * @return
+	 */
+	private String getAcctName(int id)	{
+		for (MAccount acct:m_accounts)	{
+			if (acct.getC_ElementValue_ID() == id)	{
+				return acct.getValue();
+			}
 		}
+		throw new UnsupportedOperationException("Account with id=" + id + " not found." );
 	}
+	
+	private List<Account> getSorted() {
+		SortedSet<String> sortedset = new TreeSet<String>(cache.keySet());
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		Iterator<String> it = sortedset.iterator();
+		while (it.hasNext()) {
+			accounts.add(cache.get(it.next()));
+		}
+		return accounts;
 
+	}
 }
