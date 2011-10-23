@@ -64,7 +64,10 @@ import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.compiere.util.CLogger;
 import org.compiere.util.Env;
+import org.jfree.util.Log;
+import org.python.modules.thread;
 
 /**
  * ElementsTree 
@@ -73,6 +76,7 @@ import org.compiere.util.Env;
  * Indeos Consultoria http://www.indeos.es
  */
 public class AccountsTree <T extends Account> implements Visitable<T> {
+	private static CLogger s_log = CLogger.getCLogger(AccountsTree.class);
 	
 	// NB: LinkedHashSet preserves insertion order
     private final Set<AccountsTree<T>> children = new LinkedHashSet<AccountsTree<T>>();
@@ -158,6 +162,28 @@ public class AccountsTree <T extends Account> implements Visitable<T> {
     	return data;
     }
     
+    /**
+     * Get child with this value or null if not found
+     * @param name Account name
+     * @return
+     */
+    public AccountsTree<T> getChild(String name)	{
+    	// Follow all childrens of this element
+    	// if start with like the name of the account, 
+    	// then deep inside
+    	for (AccountsTree<T> child: children ) {
+            if (name.equals(child.data.getName()))	{
+            	return child;
+            }
+    		if (name.startsWith(child.data.getName())) {
+                return child.getChild(name);
+            }
+        }
+    	// If not found, return null
+    	s_log.warning("Can't find account: " + name);
+    	return null;
+    }
+    
     public AccountsTree<T> getChild(int index)	{
     	if (children_array == null)	{
     		children_array = children.toArray(new AccountsTree[children.size()]);
@@ -209,7 +235,8 @@ class PrintIndentedVisitor implements Visitor<Account> {
 	 * @see es.indeos.osx.finreports.model.Visitor#visitData(es.indeos.osx.finreports.model.ElementsTree)
 	 */
     public void visitData(AccountsTree<Account> parent, Account data) {
-        if (data == null )	{
+    	/*
+    	if (data == null )	{
         	return;
         }
     	for (int i = 0; i < indent; i++) { // TODO: naive implementation
@@ -217,7 +244,7 @@ class PrintIndentedVisitor implements Visitor<Account> {
         }
        
        System.out.println(data.getName() + " => " + data.getBalance());
-              
+          */    
     }
 
 	/* (non-Javadoc)

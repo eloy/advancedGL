@@ -107,14 +107,16 @@ public class MFactAcctBalance extends X_Fact_Acct_Balance {
 	public BigDecimal getBalance()	{
 		return getAmtAcctDr().min(getAmtAcctCr());
 	}
-
+	
 	/**
 	 * Fact_Acct_Balance haven't key info
 	 */
+	
 	@Override
 	protected void setKeyInfo() {
 
 	}
+	
 	
 	
 	

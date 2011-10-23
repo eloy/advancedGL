@@ -71,7 +71,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 
+import es.indeos.osx.finreports.model.Account;
 import es.indeos.osx.finreports.model.AccountsTree;
+import es.indeos.osx.finreports.model.FinReport;
 import es.indeos.osx.finreports.model.FinreportDocument;
 import es.indeos.osx.finreports.model.FinreportType;
 import es.indeos.osx.finreports.model.LineType;
@@ -86,41 +88,11 @@ import net.sf.jasperreports.engine.JRField;
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class BalanceDataSource implements JRDataSource{
+public class BalanceDataSource extends FinReport implements JRDataSource{
 
-	int index = 0;
-	private FinreportType report;
-	private PageType[] pages;
-	private ArrayList<LineType> lines;
 	
-	public BalanceDataSource()	{
-		System.out.println("Creando Data Source");		
-		loadPages();
-		
-		loadAccountTree();
-		
-		System.out.println("Creado.");
-	}
-	
-	private void loadAccountTree()	{
-		AccountsTree.getElementTree();
-	}
-	
-	
-	/**
-	 * Load pages from XML report definition
-	 */
-	private void loadPages()	{
-		lines = new ArrayList<LineType>();
-		
-		report = loadReport();
-		pages = report.getPageArray();
-		
-		for (PageType page:pages)	{
-			for (LineType line:page.getLineArray())	{
-				lines.add(line);				
-			}
-		}
+	public BalanceDataSource(AccountsTree<Account>[] trees)	{
+	super(trees);
 	}
 	
 	/* (non-Javadoc)
@@ -130,7 +102,8 @@ public class BalanceDataSource implements JRDataSource{
 	public Object getFieldValue(JRField field) throws JRException {
 		String name = field.getName();
 		if (name.equals("text"))	{
-			return lines.get(index).getText();
+			//return lines.get(index).getText();
+			return "texto";
 		}
 		else if (name.equals("debe"))	{
 			return 0;
@@ -146,26 +119,14 @@ public class BalanceDataSource implements JRDataSource{
 	 */
 	@Override
 	public boolean next() throws JRException {
+		/*
 		if (index == lines.size() -1)	{
 			return false;
 		}
 		index++;
 		return true;
+		*/
+		return false;
 	}
 	
-	private FinreportType loadReport()	{
-		try {
-			// URL xmlreport = BundleProxyClassLoader.getSystemResource("xml/balance.xml");
-			String path = "/home/harlock/git/advancedGL/es.indeos.osx.finreports/xml/balance.xml";
-			File f = new File(path);
-			
-			FinreportDocument doc = FinreportDocument.Factory.parse(f);
-			return doc.getFinreport();
-			
-		}catch (Exception e)	{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 }

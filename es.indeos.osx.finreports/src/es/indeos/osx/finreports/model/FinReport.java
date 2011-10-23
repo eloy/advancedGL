@@ -58,54 +58,110 @@
  * lo gobiernan,  GPL 2.0/CDDL 1.0/EPL 1.0.
  *
  * ***** END LICENSE BLOCK ***** */
-package es.indeos.osx.finreports.jasper;
+package es.indeos.osx.finreports.model;
 
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRDataSourceProvider;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.JasperReport;
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.compiere.util.Env;
+
 
 /**
- * DataSourceProvider 
+ * FinReport 
  *
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class DataSourceProvider implements JRDataSourceProvider{
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#create(net.sf.jasperreports.engine.JasperReport)
-	 */
-	@Override
-	public JRDataSource create(JasperReport arg0) throws JRException {		
-		return new BalanceDataSource(null);		
+public class FinReport{
+	int index = 0;
+	private FinreportType report;
+	private PageType[] pages;
+	private ArrayList<LineType> lines;
+	private AccountsTree<Account>[] trees;
+	
+	private Set<FinReportLine> reportLines = new  LinkedHashSet<FinReportLine>();
+	
+	public FinReport(AccountsTree<Account>[] trees)	{
+		this.trees = trees;
+		loadPages();
 	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#dispose(net.sf.jasperreports.engine.JRDataSource)
+	
+	/**
+	 * Load pages from XML report definition
 	 */
-	@Override
-	public void dispose(JRDataSource arg0) throws JRException {
-		// TODO Auto-generated method stub
+	private void loadPages()	{
+		lines = new ArrayList<LineType>();
 		
+		report = loadReport();
+		pages = report.getPageArray();
+		
+		for (PageType page:pages)	{
+			for (LineType line:page.getLineArray())	{
+				lines.add(line);				
+			}
+		}
 	}
+	
 
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#getFields(net.sf.jasperreports.engine.JasperReport)
+	
+	private FinreportType loadReport()	{
+		try {
+			// URL xmlreport = BundleProxyClassLoader.getSystemResource("xml/balance.xml");
+			String path = "/home/harlock/git/advancedGL/es.indeos.osx.finreports/xml/balance.xml";
+			File f = new File(path);
+			
+			FinreportDocument doc = FinreportDocument.Factory.parse(f);
+			return doc.getFinreport();
+			
+		}catch (Exception e)	{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	public FinReportLine[] getLines()	{
+		for (PageType page:pages)	{
+			for (LineType line:page.getLineArray())	{
+				FinReportLine rLine = new FinReportLine();
+				rLine.setName(line.getText());
+				
+				// Calculate lines for each tree
+				FinReportColumn[] cols = new FinReportColumn[trees.length];
+				for (int i=0; i < trees.length; i++)	{
+					FinReportColumn col = new FinReportColumn();
+					col.setSources(getSources(line, trees[i]));
+					cols[i] = col;
+				}
+				rLine.setColumns(cols);
+				reportLines.add(rLine);
+			}
+		}
+		
+		return reportLines.toArray(new FinReportLine[reportLines.size()]);
+	}
+	
+	
+	/**
+	 * Get sources Accounts for this line
+	 * 
+	 * @param line
+	 * @param tree
+	 * @return
 	 */
-	@Override
-	public JRField[] getFields(JasperReport arg0) throws JRException,
-			UnsupportedOperationException {
-		throw new UnsupportedOperationException("Not implemented");
+	public List<Account> getSources(LineType line, AccountsTree<Account> tree)	{
+		List<Account> sources = new ArrayList<Account>(); 
+		for (String a:line.getAccountArray())	{			
+			String acct=a.replaceAll("\\D", "");
+			AccountsTree<Account> child = tree.getChild(acct);
+			if (child != null)	{
+				sources.add(child.getData());
+			}
+		}		
+		return sources;
 	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#supportsGetFieldsOperation()
-	 */
-	@Override
-	public boolean supportsGetFieldsOperation() {
-		return false;
-	}
-
 }

@@ -67,6 +67,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
 import org.compiere.util.Env;
+import org.compiere.util.Formater;
 
 /**
  * AccountTreeTableModel 
@@ -214,10 +215,10 @@ public class AccountTreeTableModel implements TreeTableModel {
 		}
 		case 4: {
 			if (((AccountsTree<Account>) node).getChildCount() == 0)	{
-				return acct.getBalance();
+				return Formater.formatAmt(acct.getBalance());
 			}
 			else {
-				return acct.getChildsBalance();
+				return Formater.formatAmt(acct.getChildsBalance());
 			}
 		}
 			

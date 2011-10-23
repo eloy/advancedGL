@@ -66,11 +66,10 @@ import javax.swing.JScrollPane;
 
 import org.compiere.apps.AEnv;
 import org.compiere.swing.CFrame;
-import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
 import org.opensixen.osgi.interfaces.ICommand;
 
-import es.indeos.osx.finreports.jasper.BalanceDataSource;
+import es.indeos.osx.finreports.model.Account;
 import es.indeos.osx.finreports.model.AccountTreeTableModel;
 import es.indeos.osx.finreports.model.AccountsTree;
 import es.indeos.osx.finreports.treetable.JTreeTable;
@@ -105,9 +104,16 @@ public class GLDashBoard extends CFrame  implements ICommand  {
 		public void jbInit()	{
 			//CPanel mainPanel = new CPanel();
 			//getContentPane().add(mainPanel);
-			JTreeTable treeTable = new JTreeTable(new AccountTreeTableModel(AccountsTree.getElementTree()));
-			//JTreeTable treeTable = new JTreeTable(new FileSystemModel());
-			getContentPane().add(new JScrollPane(treeTable));			
+			
+			// Create treeTable
+			AccountsTree<Account> tree = AccountsTree.getElementTree();
+			//JTreeTable treeTable = new JTreeTable(new AccountTreeTableModel(tree));
+			//getContentPane().add(new JScrollPane(treeTable));			
+			
+			AccountsTree<Account>[] years = (AccountsTree<Account>[]) new AccountsTree<?>[2];
+			years[0] = tree;
+			years[1] = tree;
+			getContentPane().add(new FinReportViewerPanel(years));
 		}
 	
 	/* (non-Javadoc)

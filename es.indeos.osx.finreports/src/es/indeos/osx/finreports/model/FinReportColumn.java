@@ -58,54 +58,49 @@
  * lo gobiernan,  GPL 2.0/CDDL 1.0/EPL 1.0.
  *
  * ***** END LICENSE BLOCK ***** */
-package es.indeos.osx.finreports.jasper;
+package es.indeos.osx.finreports.model;
 
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRDataSourceProvider;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.JasperReport;
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.compiere.util.Env;
 
 /**
- * DataSourceProvider 
+ * FinReportColumn 
  *
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class DataSourceProvider implements JRDataSourceProvider{
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#create(net.sf.jasperreports.engine.JasperReport)
-	 */
-	@Override
-	public JRDataSource create(JasperReport arg0) throws JRException {		
-		return new BalanceDataSource(null);		
+public class FinReportColumn {
+	
+	private List<Account> sources;
+	
+	public void addSource(Account account)	{
+		sources.add(account);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#dispose(net.sf.jasperreports.engine.JRDataSource)
+	/**
+	 * @return the sources
 	 */
-	@Override
-	public void dispose(JRDataSource arg0) throws JRException {
-		// TODO Auto-generated method stub
-		
+	public List<Account> getSources() {
+		return sources;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#getFields(net.sf.jasperreports.engine.JasperReport)
+	/**
+	 * @param sources the sources to set
 	 */
-	@Override
-	public JRField[] getFields(JasperReport arg0) throws JRException,
-			UnsupportedOperationException {
-		throw new UnsupportedOperationException("Not implemented");
+	public void setSources(List<Account> sources) {
+		this.sources = sources;
 	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#supportsGetFieldsOperation()
-	 */
-	@Override
-	public boolean supportsGetFieldsOperation() {
-		return false;
+			
+	public BigDecimal getAmount()	{
+		BigDecimal amt = Env.ZERO;
+		for (Account acct:sources)	{
+			System.out.println("Sumando cuenta: " +acct.getName() + " => " + acct.getBalance());
+			amt = amt.add(acct.getBalance());
+		}
+		return amt;
 	}
-
+	
+	
 }

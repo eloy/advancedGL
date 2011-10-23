@@ -58,54 +58,47 @@
  * lo gobiernan,  GPL 2.0/CDDL 1.0/EPL 1.0.
  *
  * ***** END LICENSE BLOCK ***** */
-package es.indeos.osx.finreports.jasper;
+package es.indeos.osx.finreports.model;
 
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRDataSourceProvider;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.JasperReport;
 
 /**
- * DataSourceProvider 
+ * FinReportLine 
  *
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class DataSourceProvider implements JRDataSourceProvider{
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#create(net.sf.jasperreports.engine.JasperReport)
+public class FinReportLine {
+	private String name;
+	
+	private FinReportColumn[] columns;	
+	
+	/**
+	 * @return the name
 	 */
-	@Override
-	public JRDataSource create(JasperReport arg0) throws JRException {		
-		return new BalanceDataSource(null);		
+	public String getName() {
+		return name;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#dispose(net.sf.jasperreports.engine.JRDataSource)
+	/**
+	 * @param name the name to set
 	 */
-	@Override
-	public void dispose(JRDataSource arg0) throws JRException {
-		// TODO Auto-generated method stub
-		
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#getFields(net.sf.jasperreports.engine.JasperReport)
+	/**
+	 * @return the columns
 	 */
-	@Override
-	public JRField[] getFields(JasperReport arg0) throws JRException,
-			UnsupportedOperationException {
-		throw new UnsupportedOperationException("Not implemented");
+	public FinReportColumn[] getColumns() {
+		return columns;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#supportsGetFieldsOperation()
+	/**
+	 * @param columns the columns to set
 	 */
-	@Override
-	public boolean supportsGetFieldsOperation() {
-		return false;
-	}
+	public void setColumns(FinReportColumn[] columns) {
+		this.columns = columns;
+	}		
+	
 
 }

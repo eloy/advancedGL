@@ -79,7 +79,7 @@ public class BalanceJasper extends ReportStarterOSGI {
 	@Override
 	public JRDataSource getCustomDataSource() {
 		// TODO Auto-generated method stub
-		return new BalanceDataSource();
+		return new BalanceDataSource(null);
 	}
 	
 	

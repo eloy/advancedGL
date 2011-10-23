@@ -58,54 +58,40 @@
  * lo gobiernan,  GPL 2.0/CDDL 1.0/EPL 1.0.
  *
  * ***** END LICENSE BLOCK ***** */
-package es.indeos.osx.finreports.jasper;
+package es.indeos.osx.finreports.client;
 
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRDataSourceProvider;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.JasperReport;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
+import org.compiere.util.Env;
+
+import es.indeos.osx.finreports.model.Account;
+import es.indeos.osx.finreports.model.AccountsTree;
+import es.indeos.osx.finreports.model.FinReportTableModel;
 
 /**
- * DataSourceProvider 
+ * FinReportViewerPanel 
  *
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class DataSourceProvider implements JRDataSourceProvider{
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#create(net.sf.jasperreports.engine.JasperReport)
-	 */
-	@Override
-	public JRDataSource create(JasperReport arg0) throws JRException {		
-		return new BalanceDataSource(null);		
+public class FinReportViewerPanel extends JPanel {
+	
+	AccountsTree<Account>[] trees;
+	
+	public FinReportViewerPanel(AccountsTree<Account>[] trees)	{
+		this.trees = trees;
+		jbInit();
 	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#dispose(net.sf.jasperreports.engine.JRDataSource)
-	 */
-	@Override
-	public void dispose(JRDataSource arg0) throws JRException {
-		// TODO Auto-generated method stub
+	
+	private void jbInit()	{
 		
+		JTable table = new JTable();
+		table.setModel(new FinReportTableModel(trees));
+		this.add(new JScrollPane(table));
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#getFields(net.sf.jasperreports.engine.JasperReport)
-	 */
-	@Override
-	public JRField[] getFields(JasperReport arg0) throws JRException,
-			UnsupportedOperationException {
-		throw new UnsupportedOperationException("Not implemented");
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.jasperreports.engine.JRDataSourceProvider#supportsGetFieldsOperation()
-	 */
-	@Override
-	public boolean supportsGetFieldsOperation() {
-		return false;
-	}
-
+	
+		
 }
