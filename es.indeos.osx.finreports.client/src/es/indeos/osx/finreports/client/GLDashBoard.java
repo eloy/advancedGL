@@ -60,6 +60,7 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.client;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -81,6 +82,7 @@ import org.compiere.swing.CLabel;
 import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
 import org.jdesktop.swingx.JXTreeTable;
+import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.opensixen.osgi.interfaces.ICommand;
 
 import es.indeos.osx.finreports.model.Account;
@@ -97,7 +99,8 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 
 	private CLogger log = CLogger.getCLogger(getClass());
 
-	
+	private Color colorA = new Color(255, 235, 235);
+	private Color colorB = new Color(255, 253, 253);
 	
 	private VDate dateFrom = new VDate();
 	private VDate dateTo = new VDate();
@@ -118,8 +121,6 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 			try
 			{
 				jbInit();
-				//setScript (script);
-				//dynInit();
 				pack();
 				AEnv.showCenterScreen(this);				
 				toFront();
@@ -132,12 +133,10 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 		}
 		
 		public void jbInit()	{
-			Container mainPanel = getContentPane();
-			//getContentPane().add(mainPanel);
-									
-			mainPanel.setLayout(new MigLayout("", "[grow][][grow]", "[][shrink 0]"));				
-			// Setup Settings panel
+			Container mainPanel = getContentPane();								
+			mainPanel.setLayout(new MigLayout("", "[grow][][grow]", "[][shrink 0]"));
 			
+			// Setup Settings panel			
 			CPanel topPanel = new CPanel(new MigLayout());
 			dateFrom.setMandatory(true);
 			dateFrom.setValue(new Timestamp(System.currentTimeMillis()));
@@ -152,14 +151,11 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 			topPanel.add(refreshBtn);
 			mainPanel.add(topPanel, "wrap");			
 				
+			
 			treetable = new JXTreeTable(new AccountTreeTableModel());
-			treetable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-			treetable.getColumnModel().getColumn(0).setMinWidth(500);
-			treetable.getColumnModel().getColumn(1).setMinWidth(100);
-			treetable.getColumnModel().getColumn(2).setMinWidth(100);
-			treetable.getColumnModel().getColumn(3).setMinWidth(100);
-			treetable.packAll();
-						
+			treetable.setHighlighters(HighlighterFactory.createAlternateStriping(colorA, colorB));
+			
+			setupColumnsWith();								
 			mainPanel.add(new JScrollPane(treetable), "wrap, growx");
 			
 					
@@ -177,14 +173,8 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 		// Create treeTable
 		AccountsTree<Account> tree = AccountsTree.getElementTree();
 		treetable.setTreeTableModel(new AccountTreeTableModel(tree));
-		
-		treetable.repaint();
-		treetable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		treetable.getColumnModel().getColumn(0).setMinWidth(500);
-		treetable.getColumnModel().getColumn(1).setMinWidth(100);
-		treetable.getColumnModel().getColumn(2).setMinWidth(100);
-		treetable.getColumnModel().getColumn(3).setMinWidth(100);
-		treetable.packAll();
+		setupColumnsWith();
+		treetable.repaint();	
 		
 		
 		AccountsTree<Account>[] years = (AccountsTree<Account>[]) new AccountsTree<?>[2];
@@ -195,6 +185,19 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 		pack();
 		repaint();
 	}
+	
+	/**
+	 * Setup sizes for columns in treeTable
+	 */
+	private void setupColumnsWith()	{
+		treetable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		treetable.getColumnModel().getColumn(0).setMinWidth(500);
+		treetable.getColumnModel().getColumn(1).setMinWidth(100);
+		treetable.getColumnModel().getColumn(2).setMinWidth(100);
+		treetable.getColumnModel().getColumn(3).setMinWidth(100);
+		treetable.packAll();
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.opensixen.osgi.interfaces.ICommand#prepare()
 	 */
