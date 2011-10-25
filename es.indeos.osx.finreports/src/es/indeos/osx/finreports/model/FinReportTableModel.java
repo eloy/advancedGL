@@ -60,6 +60,7 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.model;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import javax.swing.event.TableModelListener;
@@ -83,8 +84,14 @@ public class FinReportTableModel implements TableModel {
 	public FinReportTableModel(AccountsTree<Account>[] trees) {
 		super();
 		this.trees = trees;
+		
+	}
+	
+	
+	public void load() throws IOException	{
 		FinReport report = new FinReport(trees);
-		lines = report.getLines();		
+		report.loadReportDefinition();
+		lines = report.getLines();				
 	}
 
 	/* (non-Javadoc)
@@ -100,7 +107,7 @@ public class FinReportTableModel implements TableModel {
 	 */
 	@Override
 	public int getColumnCount() {		
-		return trees.length + 1;
+		return trees.length + 2;
 	}
 
 	/* (non-Javadoc)
@@ -137,7 +144,12 @@ public class FinReportTableModel implements TableModel {
 		if (columnIndex == 0)	{
 			return lines[rowIndex].getName();
 		}
-		BigDecimal amt = lines[rowIndex].getColumns()[columnIndex -1].getAmount(); 
+		
+		if (columnIndex == 1)	{
+			return lines[rowIndex].getSource();
+		}
+		
+		BigDecimal amt = lines[rowIndex].getColumns()[columnIndex -2].getBalance(); 
 		return Formater.formatAmt(amt);		
 	}
 

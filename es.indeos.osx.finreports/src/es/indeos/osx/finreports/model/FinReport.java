@@ -61,13 +61,18 @@
 package es.indeos.osx.finreports.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.compiere.util.Env;
+import org.compiere.util.CLogger;
+import org.jopendocument.dom.spreadsheet.Sheet;
+import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 
 /**
@@ -77,91 +82,39 @@ import org.compiere.util.Env;
  * Indeos Consultoria http://www.indeos.es
  */
 public class FinReport{
-	int index = 0;
-	private FinreportType report;
-	private PageType[] pages;
-	private ArrayList<LineType> lines;
-	private AccountsTree<Account>[] trees;
+	private CLogger log = CLogger.getCLogger(getClass());
 	
+	private AccountsTree<Account>[] trees;	
 	private Set<FinReportLine> reportLines = new  LinkedHashSet<FinReportLine>();
 	
+	
 	public FinReport(AccountsTree<Account>[] trees)	{
-		this.trees = trees;
-		loadPages();
+		this.trees = trees;		
 	}
 	
 	/**
 	 * Load pages from XML report definition
+	 * @throws IOException 
 	 */
-	private void loadPages()	{
-		lines = new ArrayList<LineType>();
-		
-		report = loadReport();
-		pages = report.getPageArray();
-		
-		for (PageType page:pages)	{
-			for (LineType line:page.getLineArray())	{
-				lines.add(line);				
-			}
+	public void loadReportDefinition() throws IOException	{
+		// Load the file.
+		File file = new File("/home/harlock/Documentos/devel/opensixen/PGC/osx/PGC2008_Situacion_PYME.ods");
+		final Sheet sheet = SpreadSheet.createFromFile(file).getSheet(0);
+		for (int i=0; i < sheet.getRowCount(); i++)	{
+			FinReportLine line = new FinReportLine();
+			line.setName(sheet.getValueAt(0, i).toString());
+			line.setSource(sheet.getValueAt(1, i).toString());
+			reportLines.add(line);
 		}
 	}
-	
-
-	
-	private FinreportType loadReport()	{
-		try {
-			// URL xmlreport = BundleProxyClassLoader.getSystemResource("xml/balance.xml");
-			String path = "/home/harlock/git/advancedGL/es.indeos.osx.finreports/xml/balance.xml";
-			File f = new File(path);
-			
-			FinreportDocument doc = FinreportDocument.Factory.parse(f);
-			return doc.getFinreport();
-			
-		}catch (Exception e)	{
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	
+		
 	public FinReportLine[] getLines()	{
-		for (PageType page:pages)	{
-			for (LineType line:page.getLineArray())	{
-				FinReportLine rLine = new FinReportLine();
-				rLine.setName(line.getText());
-				
-				// Calculate lines for each tree
-				FinReportColumn[] cols = new FinReportColumn[trees.length];
-				for (int i=0; i < trees.length; i++)	{
-					FinReportColumn col = new FinReportColumn();
-					col.setSources(getSources(line, trees[i]));
-					cols[i] = col;
-				}
-				rLine.setColumns(cols);
-				reportLines.add(rLine);
-			}
-		}
-		
+		for(FinReportLine line:reportLines)	{
+			line.calculate(trees);						
+		}		
 		return reportLines.toArray(new FinReportLine[reportLines.size()]);
 	}
+
+
 	
-	
-	/**
-	 * Get sources Accounts for this line
-	 * 
-	 * @param line
-	 * @param tree
-	 * @return
-	 */
-	public List<Account> getSources(LineType line, AccountsTree<Account> tree)	{
-		List<Account> sources = new ArrayList<Account>(); 
-		for (String a:line.getAccountArray())	{			
-			String acct=a.replaceAll("\\D", "");
-			AccountsTree<Account> child = tree.getChild(acct);
-			if (child != null)	{
-				sources.add(child.getData());
-			}
-		}		
-		return sources;
-	}
 }

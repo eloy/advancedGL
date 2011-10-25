@@ -61,14 +61,11 @@
 package org.opensixen.model;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.compiere.model.MElementValue;
 import org.compiere.util.Env;
-
-import es.indeos.osx.finreports.model.Account;
 
 /**
  * MAccount 

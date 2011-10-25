@@ -67,17 +67,10 @@ BalanceDataSource ds = new BalanceDataSource();
 result = "ok";
  */
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-
 import es.indeos.osx.finreports.model.Account;
 import es.indeos.osx.finreports.model.AccountsTree;
 import es.indeos.osx.finreports.model.FinReport;
-import es.indeos.osx.finreports.model.FinreportDocument;
-import es.indeos.osx.finreports.model.FinreportType;
-import es.indeos.osx.finreports.model.LineType;
-import es.indeos.osx.finreports.model.PageType;
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;

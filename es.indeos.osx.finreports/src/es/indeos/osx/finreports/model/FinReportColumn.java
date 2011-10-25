@@ -73,6 +73,8 @@ import org.compiere.util.Env;
  */
 public class FinReportColumn {
 	
+	private BigDecimal balance = Env.ZERO;
+	
 	private List<Account> sources;
 	
 	public void addSource(Account account)	{
@@ -92,15 +94,19 @@ public class FinReportColumn {
 	public void setSources(List<Account> sources) {
 		this.sources = sources;
 	}
-			
-	public BigDecimal getAmount()	{
-		BigDecimal amt = Env.ZERO;
-		for (Account acct:sources)	{
-			System.out.println("Sumando cuenta: " +acct.getName() + " => " + acct.getBalance());
-			amt = amt.add(acct.getBalance());
-		}
-		return amt;
+
+	/**
+	 * @return the balance
+	 */
+	public BigDecimal getBalance() {
+		return balance;
 	}
-	
-	
+
+	/**
+	 * @param balance the balance to set
+	 */
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
+	}				
+			
 }

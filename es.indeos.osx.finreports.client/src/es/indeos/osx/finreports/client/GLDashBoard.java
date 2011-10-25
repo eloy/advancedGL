@@ -60,40 +60,70 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.client;
 
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
+import net.miginfocom.swing.MigLayout;
 
 import org.compiere.apps.AEnv;
+import org.compiere.grid.ed.VDate;
+import org.compiere.swing.CButton;
 import org.compiere.swing.CFrame;
+import org.compiere.swing.CLabel;
+import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
+import org.jdesktop.swingx.JXTreeTable;
 import org.opensixen.osgi.interfaces.ICommand;
 
 import es.indeos.osx.finreports.model.Account;
 import es.indeos.osx.finreports.model.AccountTreeTableModel;
 import es.indeos.osx.finreports.model.AccountsTree;
-import es.indeos.osx.finreports.treetable.JTreeTable;
 
 /**
- * Tests 
+ * GL Dashboard Frame 
  *
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class GLDashBoard extends CFrame  implements ICommand  {
+public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 
 	private CLogger log = CLogger.getCLogger(getClass());
+
+	
+	
+	private VDate dateFrom = new VDate();
+	private VDate dateTo = new VDate();
+	private CButton refreshBtn = new CButton("Recargar");
+
+
+
+	private JXTreeTable treetable;
+
+
+
+	private JPanel detailsPanel;
+	
 	
 		public GLDashBoard()	{
 			super();
-			setTitle("GL Dashboard");
+			setTitle("GL Dashboard");			
 			try
 			{
 				jbInit();
 				//setScript (script);
 				//dynInit();
-				AEnv.showCenterScreen(this);
+				pack();
+				AEnv.showCenterScreen(this);				
 				toFront();
+				
 			}
 			catch(Exception ex)
 			{
@@ -102,20 +132,69 @@ public class GLDashBoard extends CFrame  implements ICommand  {
 		}
 		
 		public void jbInit()	{
-			//CPanel mainPanel = new CPanel();
+			Container mainPanel = getContentPane();
 			//getContentPane().add(mainPanel);
+									
+			mainPanel.setLayout(new MigLayout("", "[grow][][grow]", "[][shrink 0]"));				
+			// Setup Settings panel
 			
-			// Create treeTable
-			AccountsTree<Account> tree = AccountsTree.getElementTree();
-			//JTreeTable treeTable = new JTreeTable(new AccountTreeTableModel(tree));
-			//getContentPane().add(new JScrollPane(treeTable));			
+			CPanel topPanel = new CPanel(new MigLayout());
+			dateFrom.setMandatory(true);
+			dateFrom.setValue(new Timestamp(System.currentTimeMillis()));
+			dateTo.setMandatory(true);
+			dateTo.setValue(new Timestamp(System.currentTimeMillis()));
+			refreshBtn.addActionListener(this);
+
+			topPanel.add(new CLabel("Fecha inicio"));
+			topPanel.add(dateFrom);
+			topPanel.add(new CLabel("Fecha fin"));
+			topPanel.add(dateTo);
+			topPanel.add(refreshBtn);
+			mainPanel.add(topPanel, "wrap");			
+				
+			treetable = new JXTreeTable(new AccountTreeTableModel());
+			treetable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+			treetable.getColumnModel().getColumn(0).setMinWidth(500);
+			treetable.getColumnModel().getColumn(1).setMinWidth(100);
+			treetable.getColumnModel().getColumn(2).setMinWidth(100);
+			treetable.getColumnModel().getColumn(3).setMinWidth(100);
+			treetable.packAll();
+						
+			mainPanel.add(new JScrollPane(treetable), "wrap, growx");
 			
-			AccountsTree<Account>[] years = (AccountsTree<Account>[]) new AccountsTree<?>[2];
-			years[0] = tree;
-			years[1] = tree;
-			getContentPane().add(new FinReportViewerPanel(years));
+					
+			detailsPanel = new CPanel();
+			detailsPanel.setMinimumSize(new Dimension(500, 400));
+			mainPanel.add(detailsPanel, "wrap, growx");
 		}
 	
+		
+		
+	/**
+	 * 
+	 */
+	private void dynInit() {
+		// Create treeTable
+		AccountsTree<Account> tree = AccountsTree.getElementTree();
+		treetable.setTreeTableModel(new AccountTreeTableModel(tree));
+		
+		treetable.repaint();
+		treetable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		treetable.getColumnModel().getColumn(0).setMinWidth(500);
+		treetable.getColumnModel().getColumn(1).setMinWidth(100);
+		treetable.getColumnModel().getColumn(2).setMinWidth(100);
+		treetable.getColumnModel().getColumn(3).setMinWidth(100);
+		treetable.packAll();
+		
+		
+		AccountsTree<Account>[] years = (AccountsTree<Account>[]) new AccountsTree<?>[2];
+		years[0] = tree;
+		years[1] = tree;
+		detailsPanel.removeAll();
+		detailsPanel.add(new FinReportViewerPanel(years));
+		pack();
+		repaint();
+	}
 	/* (non-Javadoc)
 	 * @see org.opensixen.osgi.interfaces.ICommand#prepare()
 	 */
@@ -133,5 +212,18 @@ public class GLDashBoard extends CFrame  implements ICommand  {
 		//GLDashBoard dashboard = new GLDashBoard();
 		return "";
 	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource().equals(refreshBtn))	{
+			dynInit();
+		}
+		
+	}
+
+	
 
 }

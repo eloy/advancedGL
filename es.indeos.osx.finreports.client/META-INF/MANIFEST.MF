@@ -11,4 +11,5 @@ Require-Bundle: org.opensixen.base;bundle-version="1.0.0",
  org.opensixen.client;bundle-version="1.0.0",
  org.opensixen.core.client;bundle-version="1.0.0",
  es.indeos.osx.finreports;bundle-version="1.0.0",
- org.opensixen.core.common;bundle-version="1.0.0"
+ org.opensixen.core.common;bundle-version="1.0.0",
+ org.opensixen.libs;bundle-version="1.0.0"

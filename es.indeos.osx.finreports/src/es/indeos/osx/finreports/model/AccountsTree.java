@@ -204,16 +204,7 @@ public class AccountsTree <T extends Account> implements Visitable<T> {
 			i++;
 		}
 		throw new UnsupportedOperationException("Parent don't contain child!");
-	}
-    
-    public String toString()	{
-    	if (data == null)	{
-    		return "";
-    	}
-    	return data.getName();
-    }
-    
-    
+	}               
 }
 
 /**

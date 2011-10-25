@@ -68,6 +68,7 @@ import javax.swing.tree.TreePath;
 
 import org.compiere.util.Env;
 import org.compiere.util.Formater;
+import org.jdesktop.swingx.treetable.TreeTableModel;
 
 /**
  * AccountTreeTableModel 
@@ -80,6 +81,10 @@ public class AccountTreeTableModel implements TreeTableModel {
 	protected EventListenerList listenerList = new EventListenerList();
 	
 	AccountsTree<Account> tree;
+	
+	public AccountTreeTableModel()	{
+		tree = new AccountsTree<Account>(null);
+	}
 	
 	
 	public AccountTreeTableModel(AccountsTree<Account> tree)	{
@@ -185,7 +190,7 @@ public class AccountTreeTableModel implements TreeTableModel {
 	@Override
 	public Class getColumnClass(int column) {
 		if (column == 0)	{
-			return TreeTableModel.class;
+			return AccountsTree.class;
 		}
 		else {
 			return BigDecimal.class;
@@ -203,7 +208,7 @@ public class AccountTreeTableModel implements TreeTableModel {
 		}
 		switch (column) {
 		case 0:
-			return acct.getName();
+			return acct.getName() + " " + acct.getTitle();
 		case 1: {
 			return Env.ONE.negate();
 		}
@@ -232,7 +237,7 @@ public class AccountTreeTableModel implements TreeTableModel {
 	 */
 	@Override
 	public boolean isCellEditable(Object node, int column) {
-		  return getColumnClass(column) == TreeTableModel.class; 
+		  return false; 
 	}
 
 	/* (non-Javadoc)
@@ -242,6 +247,15 @@ public class AccountTreeTableModel implements TreeTableModel {
 	public void setValueAt(Object aValue, Object node, int column) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.jdesktop.swingx.treetable.TreeTableModel#getHierarchicalColumn()
+	 */
+	@Override
+	public int getHierarchicalColumn() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

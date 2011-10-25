@@ -60,10 +60,15 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.client;
 
+import java.io.IOException;
+import java.util.logging.Level;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.TableModel;
 
+import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 
 import es.indeos.osx.finreports.model.Account;
@@ -77,10 +82,12 @@ import es.indeos.osx.finreports.model.FinReportTableModel;
  * Indeos Consultoria http://www.indeos.es
  */
 public class FinReportViewerPanel extends JPanel {
+	private CLogger log = CLogger.getCLogger(getClass());
 	
 	AccountsTree<Account>[] trees;
 	
 	public FinReportViewerPanel(AccountsTree<Account>[] trees)	{
+		super();
 		this.trees = trees;
 		jbInit();
 	}
@@ -88,8 +95,16 @@ public class FinReportViewerPanel extends JPanel {
 	private void jbInit()	{
 		
 		JTable table = new JTable();
-		table.setModel(new FinReportTableModel(trees));
-		this.add(new JScrollPane(table));
+		FinReportTableModel tableModel = new FinReportTableModel(trees);
+		try {
+			tableModel.load();
+			table.setModel(tableModel);
+			this.add(new JScrollPane(table));
+		}
+		catch (IOException e)	{
+			log.log(Level.SEVERE, "Can't load report definition");
+		}
+		
 	}
 
 	

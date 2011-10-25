@@ -5,13 +5,7 @@ Bundle-SymbolicName: es.indeos.osx.finreports;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
- lib/jsr173_1.0_api.jar,
- lib/resolver.jar,
- lib/xbean_xpath.jar,
- lib/xbean.jar,
- lib/xmlbeans-qname.jar,
- lib/xmlpublic.jar,
- lib/xmltypes.jar
+ lib/jOpenDocument-1.0.jar
 Require-Bundle: org.opensixen.base;bundle-version="1.0.0",
  org.opensixen.core.reports;bundle-version="1.0.0",
  org.opensixen.libs;bundle-version="1.0.0",
@@ -20,5 +14,4 @@ Require-Bundle: org.opensixen.base;bundle-version="1.0.0",
 Bundle-Activator: es.indeos.osx.finreports.jasper.Activator
 Bundle-ActivationPolicy: lazy
 Export-Package: es.indeos.osx.finreports.jasper,
- es.indeos.osx.finreports.model,
- es.indeos.osx.finreports.model.impl
+ es.indeos.osx.finreports.model

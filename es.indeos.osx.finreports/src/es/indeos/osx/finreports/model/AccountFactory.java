@@ -66,7 +66,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -99,6 +98,10 @@ public class AccountFactory {
 	private AccountFactory()	{			
 	}
 	
+	
+	/**
+	 * Load Accounts 
+	 */
 	private void load()	{		
 		// Init caches
 		cache = new HashMap<String, Account>();
@@ -147,6 +150,10 @@ public class AccountFactory {
 		throw new UnsupportedOperationException("Account with id=" + id + " not found." );
 	}
 	
+	/**
+	 * Sort accounts for tree insertion
+	 * @return
+	 */
 	private List<Account> getSorted() {
 		SortedSet<String> sortedset = new TreeSet<String>(cache.keySet());
 		ArrayList<Account> accounts = new ArrayList<Account>();

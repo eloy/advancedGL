@@ -60,6 +60,12 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.model;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * FinReportLine 
@@ -70,6 +76,8 @@ package es.indeos.osx.finreports.model;
 public class FinReportLine {
 	private String name;
 	
+	private String source;
+	
 	private FinReportColumn[] columns;	
 	
 	/**
@@ -78,12 +86,27 @@ public class FinReportLine {
 	public String getName() {
 		return name;
 	}
-
+	
 	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+		
+	/**
+	 * @return the source
+	 */
+	public String getSource() {
+		return source;
+	}
+
+	/**
+	 * @param source the source to set
+	 */
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	/**
@@ -98,7 +121,44 @@ public class FinReportLine {
 	 */
 	public void setColumns(FinReportColumn[] columns) {
 		this.columns = columns;
-	}		
-	
+	}
 
+	
+	/**
+	 * Get source account and make calcs
+	 * @param trees
+	 */
+	public void calculate(AccountsTree<Account>[] trees) {
+		columns = new FinReportColumn[trees.length];
+
+		for (int t = 0; t < trees.length; t++) {
+			FinReportColumn col = new FinReportColumn();
+			List<Account> sources = new ArrayList<Account>();
+			String pattern = "([+|-]?[0-9]*)";
+			// Create a Pattern object
+			Pattern r = Pattern.compile(pattern);
+			Matcher m = r.matcher(getSource());
+			while (m.find()) {
+				String a = m.group();
+				if (a.length() == 0) {
+					continue;
+				}
+				// Clean account name
+				String acct = a.replaceAll("\\D", "");
+
+				AccountsTree<Account> child = trees[t].getChild(acct);
+				if (child != null) {
+					sources.add(child.getData());
+					BigDecimal amt = child.getData().getChildsBalance();
+
+					if (a.startsWith("-")) {
+						amt.negate();
+					}
+					col.setBalance(col.getBalance().add(amt));
+				}
+			}
+
+			columns[t] = col;
+		}
+	}
 }

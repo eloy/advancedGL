@@ -62,15 +62,12 @@ package es.indeos.osx.finreports.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.compiere.model.MElementValue;
 import org.compiere.util.Env;
 import org.opensixen.model.MAccount;
 import org.opensixen.model.MFactAcctBalance;
-import org.opensixen.model.POFactory;
-import org.opensixen.model.QParam;
 
 /**
  * Account 
@@ -81,6 +78,8 @@ import org.opensixen.model.QParam;
 public class Account {
 	
 	private String name;
+	
+	private String title;
 	
 	private List<MFactAcctBalance> facts;
 
@@ -94,8 +93,27 @@ public class Account {
 	public String getName() {
 		return name;
 	}
-
 	
+	
+	
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+
 	public BigDecimal getBalance()	{
 		if (facts == null)	{
 			return Env.ZERO;
@@ -112,6 +130,7 @@ public class Account {
 		if (accounts == null)	{
 			accounts = new ArrayList<MElementValue>();
 			name = account.getValue();
+			title = account.getName();
 		}
 		accounts.add(account);
 	}
