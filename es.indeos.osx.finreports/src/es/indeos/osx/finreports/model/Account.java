@@ -81,6 +81,8 @@ public class Account {
 	
 	private String title;
 	
+	private boolean isFolder;
+	
 	private List<MFactAcctBalance> facts;
 
 	private List<MElementValue> accounts;
@@ -112,6 +114,20 @@ public class Account {
 		this.title = title;
 	}
 
+	/**
+	 * @return the isFolder
+	 */
+	public boolean isFolder() {
+		return isFolder;
+	}
+
+	/**
+	 * @param isFolder the isFolder to set
+	 */
+	public void setFolder(boolean isFolder) {
+		this.isFolder = isFolder;
+	}
+
 
 
 	public BigDecimal getBalance()	{
@@ -131,11 +147,19 @@ public class Account {
 			accounts = new ArrayList<MElementValue>();
 			name = account.getValue();
 			title = account.getName();
+			isFolder = account.isSummary();
 		}
 		accounts.add(account);
 	}
 	
+	public List<MElementValue> getMAccounts()	{
+		return accounts;
+	}
+	
 	public void addFact(MFactAcctBalance fact)	{
+		if (isFolder())	{
+			throw new UnsupportedOperationException("Can't add facts to folder account: " + toString());
+		}
 		if (facts == null)	{
 			facts = new ArrayList<MFactAcctBalance>();
 		}
@@ -158,6 +182,13 @@ public class Account {
 		this.childsBalance = childsBalance;
 	}
 	
-	
+	/**
+	 * Return Account string representation
+	 * @return value + " " + name
+	 */
+	@Override
+	public String toString()	{
+		return getName() + " " + getTitle();
+	}
 		
 }

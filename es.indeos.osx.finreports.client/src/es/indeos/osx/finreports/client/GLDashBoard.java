@@ -66,24 +66,34 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.logging.Level;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
 import org.compiere.apps.AEnv;
 import org.compiere.grid.ed.VDate;
+import org.compiere.model.MElementValue;
+import org.compiere.model.MFactAcct;
 import org.compiere.swing.CButton;
 import org.compiere.swing.CFrame;
 import org.compiere.swing.CLabel;
 import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
+import org.compiere.util.Env;
 import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
+import org.opensixen.model.MVFactAcct;
+import org.opensixen.model.QParam;
 import org.opensixen.osgi.interfaces.ICommand;
+import org.opensixen.swing.AccountDetailTableModel;
+import org.opensixen.swing.AccountDetailViewerPanel;
 
 import es.indeos.osx.finreports.model.Account;
 import es.indeos.osx.finreports.model.AccountTreeTableModel;
@@ -95,7 +105,7 @@ import es.indeos.osx.finreports.model.AccountsTree;
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
+public class GLDashBoard extends CFrame  implements ICommand, ActionListener, ListSelectionListener  {
 
 	private CLogger log = CLogger.getCLogger(getClass());
 
@@ -112,7 +122,9 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 
 
 
-	private JPanel detailsPanel;
+	private AccountDetailViewerPanel detailsPanel;
+
+	private AccountDetailTableModel detailsTableModel;
 	
 	
 		public GLDashBoard()	{
@@ -154,12 +166,14 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 			
 			treetable = new JXTreeTable(new AccountTreeTableModel());
 			treetable.setHighlighters(HighlighterFactory.createAlternateStriping(colorA, colorB));
+			treetable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			treetable.getSelectionModel().addListSelectionListener(this);			
 			
 			setupColumnsWith();								
 			mainPanel.add(new JScrollPane(treetable), "wrap, growx");
 			
-					
-			detailsPanel = new CPanel();
+			
+			detailsPanel = new AccountDetailViewerPanel(Env.getCtx());						
 			detailsPanel.setMinimumSize(new Dimension(500, 400));
 			mainPanel.add(detailsPanel, "wrap, growx");
 		}
@@ -173,10 +187,11 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 		// Create treeTable
 		AccountsTree<Account> tree = AccountsTree.getElementTree();
 		treetable.setTreeTableModel(new AccountTreeTableModel(tree));
+
 		setupColumnsWith();
 		treetable.repaint();	
 		
-		
+		/*
 		AccountsTree<Account>[] years = (AccountsTree<Account>[]) new AccountsTree<?>[2];
 		years[0] = tree;
 		years[1] = tree;
@@ -184,6 +199,7 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 		detailsPanel.add(new FinReportViewerPanel(years));
 		pack();
 		repaint();
+		*/
 	}
 	
 	/**
@@ -226,7 +242,34 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener  {
 		}
 		
 	}
-
-	
-
+	private Account selectedAccount;
+	/* (non-Javadoc)
+	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+	 */
+	@Override
+	public void valueChanged(ListSelectionEvent e) {	
+		
+		if (!e.getValueIsAdjusting()) {			
+			Account account = (Account) treetable.getValueAt(treetable.getSelectedRow(), 0);
+			// if not folder, show facts
+			if (account != null && account != selectedAccount && !account.isFolder())	{
+				selectedAccount = account;
+				
+				// get Element values id's string
+				StringBuffer buff = new StringBuffer(MVFactAcct.COLUMNNAME_C_ElementValue_ID).append(" in (");
+				List<MElementValue> maccounts = account.getMAccounts();
+				for (int i=0; i < maccounts.size(); i++)	{
+					MElementValue ev = maccounts.get(i);
+					if (i > 0)	
+						buff.append(",");
+					buff.append(ev.getC_ElementValue_ID());
+				}
+				buff.append(")");
+				
+				QParam[] params = {new QParam(buff.toString())};
+				detailsPanel.setParams(params);
+			}
+		}
+	}	
 }
+	

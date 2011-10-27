@@ -208,7 +208,8 @@ public class AccountTreeTableModel implements TreeTableModel {
 		}
 		switch (column) {
 		case 0:
-			return acct.getName() + " " + acct.getTitle();
+			//return acct.getName() + " " + acct.getTitle();
+			return acct;
 		case 1: {
 			return Env.ONE.negate();
 		}
