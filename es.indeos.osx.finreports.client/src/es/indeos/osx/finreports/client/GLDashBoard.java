@@ -107,6 +107,8 @@ import es.indeos.osx.finreports.model.AccountsTree;
  */
 public class GLDashBoard extends CFrame  implements ICommand, ActionListener, ListSelectionListener  {
 
+	private static final long serialVersionUID = 1L;
+
 	private CLogger log = CLogger.getCLogger(getClass());
 
 	private Color colorA = new Color(255, 235, 235);
@@ -123,10 +125,7 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 
 
 	private AccountDetailViewerPanel detailsPanel;
-
-	private AccountDetailTableModel detailsTableModel;
-	
-	
+		
 		public GLDashBoard()	{
 			super();
 			setTitle("GL Dashboard");			
@@ -146,8 +145,7 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 		
 		public void jbInit()	{
 			Container mainPanel = getContentPane();								
-			mainPanel.setLayout(new MigLayout("", "[grow][][grow]", "[][shrink 0]"));
-			
+			mainPanel.setLayout(new MigLayout("", "[grow]", "[][shrink 0]"));
 			// Setup Settings panel			
 			CPanel topPanel = new CPanel(new MigLayout());
 			dateFrom.setMandatory(true);
@@ -155,6 +153,7 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 			dateTo.setMandatory(true);
 			dateTo.setValue(new Timestamp(System.currentTimeMillis()));
 			refreshBtn.addActionListener(this);
+			
 
 			topPanel.add(new CLabel("Fecha inicio"));
 			topPanel.add(dateFrom);
@@ -168,13 +167,14 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 			treetable.setHighlighters(HighlighterFactory.createAlternateStriping(colorA, colorB));
 			treetable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			treetable.getSelectionModel().addListSelectionListener(this);			
+			treetable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 			
-			setupColumnsWith();								
+			setupColumnsWith();		
 			mainPanel.add(new JScrollPane(treetable), "wrap, growx");
 			
 			
 			detailsPanel = new AccountDetailViewerPanel(Env.getCtx());						
-			detailsPanel.setMinimumSize(new Dimension(500, 400));
+			//detailsPanel.setMinimumSize(new Dimension(500, 400));
 			mainPanel.add(detailsPanel, "wrap, growx");
 		}
 	
@@ -208,9 +208,8 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 	private void setupColumnsWith()	{
 		treetable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		treetable.getColumnModel().getColumn(0).setMinWidth(500);
-		treetable.getColumnModel().getColumn(1).setMinWidth(100);
-		treetable.getColumnModel().getColumn(2).setMinWidth(100);
-		treetable.getColumnModel().getColumn(3).setMinWidth(100);
+		treetable.getColumnModel().getColumn(1).setMinWidth(150);
+		treetable.getColumnModel().getColumn(2).setMinWidth(150);
 		treetable.packAll();
 	}
 	
@@ -255,7 +254,7 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 			if (account != null && account != selectedAccount && !account.isFolder())	{
 				selectedAccount = account;
 				
-				// get Element values id's string
+				// uggly hack for get Element values id's string
 				StringBuffer buff = new StringBuffer(MVFactAcct.COLUMNNAME_C_ElementValue_ID).append(" in (");
 				List<MElementValue> maccounts = account.getMAccounts();
 				for (int i=0; i < maccounts.size(); i++)	{
