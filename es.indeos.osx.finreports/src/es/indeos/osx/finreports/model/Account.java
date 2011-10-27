@@ -88,6 +88,10 @@ public class Account {
 	private List<MElementValue> accounts;
 	
 	private BigDecimal childsBalance = Env.ZERO;
+
+	private String accountType;
+
+	private String accountSign;
 	
 	/**
 	 * @return the name
@@ -128,8 +132,52 @@ public class Account {
 		this.isFolder = isFolder;
 	}
 
+	
+	
+	/**
+	 * @return the accountType
+	 */
+	public String getAccountType() {
+		return accountType;
+	}
 
 
+
+	/**
+	 * @return the accountSign
+	 */
+	public String getAccountSign() {
+		return accountSign;
+	}
+
+
+
+	/**
+	 * Calculate balance based in account type
+	 * @param fact
+	 * @return
+	 */
+	private BigDecimal calculateBalance(MFactAcctBalance fact)	{
+		if (accountSign.equals("N"))	{
+			if (accountType.equals("E") || accountType.equals("N") )	{
+				accountSign = "D";
+			}
+			else {
+				accountSign = "C";
+			}
+		}
+		// Credit account
+		if (accountSign.equals("C"))	{
+				return fact.getAmtAcctCr().subtract(fact.getAmtAcctDr());
+		}
+		// Debit account
+		else {
+			return fact.getAmtAcctDr().subtract(fact.getAmtAcctCr());
+		}
+		
+	}
+	
+	
 	public BigDecimal getBalance()	{
 		if (facts == null)	{
 			return Env.ZERO;
@@ -137,10 +185,13 @@ public class Account {
 		BigDecimal balance = Env.ZERO;
 		
 		for (MFactAcctBalance fact:facts)	{
-			balance = balance.add(fact.getBalance());
+			balance = balance.add(calculateBalance(fact));
 		}
+		
 		return balance;
 	}
+	
+	
 
 	public void addMAccount(MAccount account)	{
 		if (accounts == null)	{
@@ -148,6 +199,8 @@ public class Account {
 			name = account.getValue();
 			title = account.getName();
 			isFolder = account.isSummary();
+			accountType = account.getAccountType();
+			accountSign = account.getAccountSign();
 		}
 		accounts.add(account);
 	}

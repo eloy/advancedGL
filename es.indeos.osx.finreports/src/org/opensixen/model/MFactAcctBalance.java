@@ -99,15 +99,7 @@ public class MFactAcctBalance extends X_Fact_Acct_Balance {
 		QParam[] params = {new QParam(MFactAcctBalance.COLUMNNAME_AD_Client_ID, AD_Client_ID)};
 		return POFactory.getList(Env.getCtx(),MFactAcctBalance.class, params);
 	}
-	
-	/**
-	 * Return balance
-	 * @return
-	 */
-	public BigDecimal getBalance()	{
-		return getAmtAcctDr().min(getAmtAcctCr());
-	}
-	
+		
 	/**
 	 * Fact_Acct_Balance haven't key info
 	 */

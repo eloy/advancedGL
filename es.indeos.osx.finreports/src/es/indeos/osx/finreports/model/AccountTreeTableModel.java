@@ -166,7 +166,7 @@ public class AccountTreeTableModel implements TreeTableModel {
 	}
 
 	
-	String[] columns = {"Cuenta", "Inicial", "Debe", "Haber", "Saldo"};
+	String[] columns = {"Cuenta", "Inicial", "Saldo"};
 	
 	/* (non-Javadoc)
 	 * @see es.indeos.osx.finreports.model.TreeTableModel#getColumnCount()
@@ -211,21 +211,18 @@ public class AccountTreeTableModel implements TreeTableModel {
 			//return acct.getName() + " " + acct.getTitle();
 			return acct;
 		case 1: {
-			return Env.ONE.negate();
+			return Env.ZERO;
 		}
 		case 2: {
-			return Env.ONE.negate();
-		}
-		case 3: {
-			return Env.ONE.negate();
-		}
-		case 4: {
+			BigDecimal amt =  Env.ZERO;
 			if (((AccountsTree<Account>) node).getChildCount() == 0)	{
-				return Formater.formatAmt(acct.getBalance());
+				amt = acct.getBalance();				
 			}
 			else {
-				return Formater.formatAmt(acct.getChildsBalance());
+				amt = acct.getChildsBalance();				
 			}
+			
+			return Formater.formatAmt(amt);
 		}
 			
 		default:
