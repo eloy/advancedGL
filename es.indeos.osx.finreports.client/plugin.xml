@@ -15,4 +15,11 @@
             name="balance">
       </command>
    </extension>
+   <extension
+         point="org.opensixen.osgi.interfaces.ICommand">
+      <command
+            class="es.indeos.osx.finreports.client.FinReportLauncher"
+            name="finreport">
+      </command>
+   </extension>
 </plugin>

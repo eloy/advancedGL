@@ -174,7 +174,6 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 			
 			
 			detailsPanel = new AccountDetailViewerPanel(Env.getCtx());						
-			//detailsPanel.setMinimumSize(new Dimension(500, 400));
 			mainPanel.add(detailsPanel, "wrap, growx");
 		}
 	
@@ -187,19 +186,8 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 		// Create treeTable
 		AccountsTree<Account> tree = AccountsTree.getElementTree();
 		treetable.setTreeTableModel(new AccountTreeTableModel(tree));
-
 		setupColumnsWith();
 		treetable.repaint();	
-		
-		/*
-		AccountsTree<Account>[] years = (AccountsTree<Account>[]) new AccountsTree<?>[2];
-		years[0] = tree;
-		years[1] = tree;
-		detailsPanel.removeAll();
-		detailsPanel.add(new FinReportViewerPanel(years));
-		pack();
-		repaint();
-		*/
 	}
 	
 	/**

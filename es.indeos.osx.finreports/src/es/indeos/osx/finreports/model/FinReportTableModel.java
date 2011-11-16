@@ -107,7 +107,7 @@ public class FinReportTableModel implements TableModel {
 	 */
 	@Override
 	public int getColumnCount() {		
-		return trees.length + 2;
+		return trees.length + 1;
 	}
 
 	/* (non-Javadoc)
@@ -143,13 +143,9 @@ public class FinReportTableModel implements TableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (columnIndex == 0)	{
 			return lines[rowIndex].getName();
-		}
+		}				
 		
-		if (columnIndex == 1)	{
-			return lines[rowIndex].getSource();
-		}
-		
-		BigDecimal amt = lines[rowIndex].getColumns()[columnIndex -2].getBalance(); 
+		BigDecimal amt = lines[rowIndex].getColumns()[columnIndex -1].getBalance(); 
 		return Formater.formatAmt(amt);		
 	}
 

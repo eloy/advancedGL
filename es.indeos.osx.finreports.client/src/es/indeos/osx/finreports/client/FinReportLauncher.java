@@ -60,63 +60,130 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.client;
 
-import java.io.IOException;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.TableColumn;
+import net.miginfocom.swing.MigLayout;
 
+import org.compiere.apps.AEnv;
+import org.compiere.grid.ed.VDate;
+import org.compiere.swing.CButton;
+import org.compiere.swing.CFrame;
+import org.compiere.swing.CLabel;
+import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
-import org.jdesktop.swingx.JXTable;
+import org.opensixen.osgi.interfaces.ICommand;
 
 import es.indeos.osx.finreports.model.Account;
 import es.indeos.osx.finreports.model.AccountsTree;
-import es.indeos.osx.finreports.model.FinReportTableModel;
 
 /**
- * FinReportViewerPanel 
+ * FinReportLauncher 
  *
  * @author Eloy Gomez
  * Indeos Consultoria http://www.indeos.es
  */
-public class FinReportViewerPanel extends JPanel {
+public class FinReportLauncher extends CFrame  implements ICommand, ActionListener{
 	private CLogger log = CLogger.getCLogger(getClass());
-	
-	AccountsTree<Account>[] trees;
 
-	private JXTable table;
+	private Color colorA = new Color(255, 235, 235);
+	private Color colorB = new Color(255, 253, 253);
 	
-	public FinReportViewerPanel(AccountsTree<Account>[] trees)	{
+	private VDate dateFrom = new VDate();
+	private VDate dateTo = new VDate();
+	private CButton refreshBtn = new CButton("Recargar");
+
+	private CPanel detailsPanel;
+	
+	
+	public FinReportLauncher()	{
 		super();
-		this.trees = trees;
-		jbInit();
+		setTitle("Financial report launcher");
+		try
+		{
+			jbInit();
+			pack();
+			AEnv.showCenterScreen(this);				
+			toFront();
+			
+		}
+		catch(Exception ex)
+		{
+			log.log(Level.SEVERE, "", ex);
+		}
+		
 	}
+	
 	
 	private void jbInit()	{
+		Container mainPanel = getContentPane();								
+		mainPanel.setLayout(new MigLayout("", "[grow]", "[][shrink 0]"));
+		// Setup Settings panel			
+		CPanel topPanel = new CPanel(new MigLayout());
+		dateFrom.setMandatory(true);
+		dateFrom.setValue(new Timestamp(System.currentTimeMillis()));
+		dateTo.setMandatory(true);
+		dateTo.setValue(new Timestamp(System.currentTimeMillis()));
+		refreshBtn.addActionListener(this);
 		
-		table = new JXTable();
-		FinReportTableModel tableModel = new FinReportTableModel(trees);
-		try {
-			tableModel.load();
-			table.setModel(tableModel);
-			this.add(new JScrollPane(table));
-			
-			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);		
-			for (TableColumn col: table.getColumns())	{			
-				col.setMinWidth(120);
-			}
-				
-			table.packAll();
-		}
-		catch (IOException e)	{
-			log.log(Level.SEVERE, "Can't load report definition");
+		topPanel.add(new CLabel("Fecha inicio"));
+		topPanel.add(dateFrom);
+		topPanel.add(new CLabel("Fecha fin"));
+		topPanel.add(dateTo);
+		topPanel.add(refreshBtn);
+		mainPanel.add(topPanel, "wrap");			
+		detailsPanel = new CPanel();	
+		detailsPanel.setMinimumSize(new Dimension(500, 400));
+		mainPanel.add(detailsPanel, "wrap, growx");
+	}
+	
+	
+	private void dynInit() {
+		// Create treeTable
+		AccountsTree<Account> tree = AccountsTree.getElementTree();			
+		AccountsTree<Account>[] years = (AccountsTree<Account>[]) new AccountsTree<?>[2];
+		years[0] = tree;
+		years[1] = tree;
+		detailsPanel.removeAll();
+		FinReportViewerPanel panel = new FinReportViewerPanel(years);
+		panel.setupColumnsWith();
+		detailsPanel.add(panel ,"wrap, growx");
+		pack();
+		repaint();		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.opensixen.osgi.interfaces.ICommand#prepare()
+	 */
+	@Override
+	public void prepare() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.opensixen.osgi.interfaces.ICommand#doIt()
+	 */
+	@Override
+	public String doIt() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource().equals(refreshBtn))	{
+			dynInit();
 		}		
 	}
-	
-	public void setupColumnsWith()	{
-		
-	}
-	
+
 }

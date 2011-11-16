@@ -62,17 +62,17 @@ package es.indeos.osx.finreports.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.compiere.util.CLogger;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
+import org.opensixen.osgi.ResourceFinder;
+
+import es.indeos.osx.finreports.jasper.Activator;
 
 
 /**
@@ -87,6 +87,7 @@ public class FinReport{
 	private AccountsTree<Account>[] trees;	
 	private Set<FinReportLine> reportLines = new  LinkedHashSet<FinReportLine>();
 	
+	public final static String END_OF_REPORT_STRING = "**END**";
 	
 	public FinReport(AccountsTree<Account>[] trees)	{
 		this.trees = trees;		
@@ -95,15 +96,22 @@ public class FinReport{
 	/**
 	 * Load pages from XML report definition
 	 * @throws IOException 
+	 * @throws  
 	 */
-	public void loadReportDefinition() throws IOException	{
+	public void loadReportDefinition() throws IOException 	{
 		// Load the file.
-		File file = new File("/home/harlock/Documentos/devel/opensixen/PGC/osx/PGC2008_Situacion_PYME.ods");
+		File file = ResourceFinder.getFile("reports/PGC2008_Situacion_PYME.ods");	
 		final Sheet sheet = SpreadSheet.createFromFile(file).getSheet(0);
-		for (int i=0; i < sheet.getRowCount(); i++)	{
+		for (int i=0; i < sheet.getRowCount(); i++)	{			
+			String name = sheet.getValueAt(0, i).toString();
+			// If end of string reached
+			if (END_OF_REPORT_STRING.equals(name))	{
+				return;
+			}
 			FinReportLine line = new FinReportLine();
-			line.setName(sheet.getValueAt(0, i).toString());
+			line.setName(name);
 			line.setSource(sheet.getValueAt(1, i).toString());
+			
 			reportLines.add(line);
 		}
 	}
