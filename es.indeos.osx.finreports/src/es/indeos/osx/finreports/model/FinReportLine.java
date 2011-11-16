@@ -80,6 +80,29 @@ public class FinReportLine {
 	
 	private FinReportColumn[] columns;	
 	
+	private boolean ignored = false;
+	
+	private boolean isCalculation = false;
+	
+	private boolean isCalculated = false;		
+	
+	/**
+	 * @param name
+	 * @param source
+	 */
+	public FinReportLine(String name, String source) {
+		super();
+		this.name = name;
+		setSource(source);
+	}
+
+	/**
+	 * 
+	 */
+	public FinReportLine() {
+		super();
+	}
+
 	/**
 	 * @return the name
 	 */
@@ -107,6 +130,13 @@ public class FinReportLine {
 	 */
 	public void setSource(String source) {
 		this.source = source;
+		if (source.length() == 0)	{
+			ignored = true;
+		}
+		
+		if (source.startsWith("?="))	{
+			isCalculation = true;
+		}
 	}
 
 	/**
@@ -122,8 +152,37 @@ public class FinReportLine {
 	public void setColumns(FinReportColumn[] columns) {
 		this.columns = columns;
 	}
-
+			
+	/**
+	 * @return the isCalculation
+	 */
+	public boolean isCalculation() {
+		return isCalculation;
+	}
 	
+	/**
+	 * @return the isCalculated
+	 */
+	public boolean isCalculated() {
+		return isCalculated;
+	}
+
+	/**
+	 * @param isCalculated the isCalculated to set
+	 */
+	public void setCalculated(boolean isCalculated) {
+		this.isCalculated = isCalculated;
+	}
+	
+	
+
+	/**
+	 * @return the ignore
+	 */
+	public boolean isIgnored() {
+		return ignored;
+	}
+
 	/**
 	 * Get source account and make calcs
 	 * @param trees

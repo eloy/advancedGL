@@ -144,10 +144,19 @@ public class FinReportTableModel implements TableModel {
 	 */
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (columnIndex == 0)	{
-			return lines[rowIndex].getName();
+		if (columnIndex == 0)	{			
+			return lines[rowIndex].getName();			
 		}				
+		// Ignored lines, return null
+		if (lines[rowIndex].isIgnored())	{
+			return null;
+		}
 		
+		// If no columns, report error
+		FinReportColumn[] columns = lines[rowIndex].getColumns(); 
+		if (columns == null || columns.length < columnIndex)	{
+			return "error";
+		}
 		BigDecimal amt = lines[rowIndex].getColumns()[columnIndex -1].getBalance(); 
 		return Formater.formatAmt(amt);		
 	}

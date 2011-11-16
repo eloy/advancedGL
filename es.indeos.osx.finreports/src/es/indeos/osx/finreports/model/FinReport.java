@@ -1,4 +1,4 @@
- /******* BEGIN LICENSE BLOCK *****
+/******* BEGIN LICENSE BLOCK *****
  * Versión: GPL 2.0/CDDL 1.0/EPL 1.0
  *
  * Los contenidos de este fichero están sujetos a la Licencia
@@ -62,14 +62,18 @@ package es.indeos.osx.finreports.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.compiere.util.CLogger;
+import org.compiere.util.Env;
 import org.compiere.util.ValueNamePair;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
-import org.opensixen.osgi.ResourceFinder;
+
 
 
 /**
@@ -102,23 +106,116 @@ public class FinReport{
 		final Sheet sheet = SpreadSheet.createFromFile(report).getSheet(0);
 		for (int i=0; i < sheet.getRowCount(); i++)	{			
 			String name = sheet.getValueAt(0, i).toString();
+			String source = sheet.getValueAt(1, i).toString();						
 			// If end of string reached
 			if (END_OF_REPORT_STRING.equals(name))	{
 				return;
 			}
-			FinReportLine line = new FinReportLine();
-			line.setName(name);
-			line.setSource(sheet.getValueAt(1, i).toString());
-			
+			FinReportLine line = new FinReportLine(name, source);						
 			reportLines.add(line);
 		}
 	}
 		
 	public FinReportLine[] getLines()	{
+		// First make calculations
 		for(FinReportLine line:reportLines)	{
-			line.calculate(trees);						
-		}		
-		return reportLines.toArray(new FinReportLine[reportLines.size()]);
+			if (!line.isCalculation())	{
+				line.calculate(trees);
+			}
+		}
+		
+		FinReportLine[] lines = reportLines.toArray(new FinReportLine[reportLines.size()]); 
+		makeCalculations(lines);
+		
+		return lines;
+	}
+	
+	/**
+	 * Make calculations in lines
+	 * TODO R E F A C T O R!!!!!!!!!!!
+	 * @param lines
+	 */
+	private void makeCalculations(FinReportLine[] lines)	{
+		boolean done = true;
+		int maxLoop = 10;
+		int loopCounter = 0;
+		do {
+			done = true;
+			for(FinReportLine line:reportLines)	{
+				if (line.isCalculation()&& !line.isCalculated())	{
+					try {
+						FinReportColumn[] columns = new FinReportColumn[trees.length];				
+						for(int i=0; i < trees.length; i++)	{
+							columns[i] = new FinReportColumn();
+							// Extract formula and aply  for each column
+							BigDecimal value = Env.ZERO;
+							String pattern = "([+|-]?[\\d\\w:]*)";
+							// Create a Pattern object
+							Pattern r = Pattern.compile(pattern);
+							Matcher m = r.matcher(line.getSource());
+							while (m.find()) {
+								String a = m.group();
+								if (a.length() == 0)	{
+									continue;
+								}
+								BigDecimal calc = Env.ZERO;
+								if (a.contains(":"))	{
+									calc = calculateRange(a,i, lines);
+								}
+								else {
+									int index = new Integer(a.replaceAll("\\D", "")) -1;
+									if (index > lines.length || index < 0)	{
+										throw new CalculationException("Invalid index in " + line.getSource());
+									}
+									if (lines[index].isCalculation() && !lines[index].isCalculated())	{
+										throw new CalculationException("Waiting for " + lines[index].getName());
+									}
+									if (!lines[index].isIgnored())	{
+										calc = lines[index].getColumns()[i].getBalance();
+									}
+								}
+								if (a.startsWith("-"))	{
+									calc = calc.negate();
+								}
+								value = value.add(calc);
+							}
+							columns[i].setBalance(value);
+						}
+						line.setColumns(columns);
+						line.setCalculated(true);
+					}
+					catch (CalculationException e) {
+						done = false;
+					}
+				}			
+			}
+			loopCounter++;
+		} while (done == false || loopCounter < maxLoop);
+	}
+	
+	/**
+	 * Make calculation in ranges
+	 * 
+	 * @param formula
+	 * @param column
+	 * @param lines
+	 * @return
+	 * @throws CalculationException
+	 */
+	private BigDecimal calculateRange(String formula, int column, FinReportLine[] lines) throws CalculationException	{
+		String[] range = formula.split(":");
+		int from = new Integer(range[0].replaceAll("\\D", "")) - 1;
+		int to = new Integer(range[1].replaceAll("\\D", "")) - 1;
+		BigDecimal value = Env.ZERO;
+		for (int i = from; i <= to; i++)	{
+			if (lines[i].isCalculation() && !lines[i].isCalculated())	{
+				throw new CalculationException("Waiting for " + lines[i].getName());
+			}
+			if (!lines[i].isIgnored())	{				
+				value = value.add(lines[i].getColumns()[column].getBalance());
+			}
+		}
+		return value;
 	}
 
 	/**
@@ -138,6 +235,14 @@ public class FinReport{
 				new ValueNamePair("reports/PGC2008_Situacion_PYME.ods", "Situacion (PYME)")				
 				};				       
 		return reports;
+	}
+	
+}
+
+class CalculationException extends RuntimeException{
+
+	public CalculationException(String message) {
+		super(message);
 	}
 	
 }
