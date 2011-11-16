@@ -61,14 +61,15 @@
 package es.indeos.osx.finreports.client;
 
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.logging.Level;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -83,6 +84,7 @@ import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 import org.compiere.util.Util;
+import org.jdesktop.swingx.JXTable;
 import org.opensixen.model.QParam;
 import org.opensixen.osgi.ResourceFinder;
 import org.opensixen.osgi.interfaces.ICommand;
@@ -90,6 +92,7 @@ import org.opensixen.osgi.interfaces.ICommand;
 import es.indeos.osx.finreports.model.Account;
 import es.indeos.osx.finreports.model.AccountsTree;
 import es.indeos.osx.finreports.model.FinReport;
+import es.indeos.osx.finreports.model.FinReportTableModel;
 
 /**
  * FinReportLauncher 
@@ -105,7 +108,7 @@ public class FinReportLauncher extends CFrame  implements ICommand, ActionListen
 	private CButton refreshBtn = new CButton("Recargar");
 	private VComboBox reportCombo = new VComboBox(FinReport.getavailableReports());
 
-	private CPanel detailsPanel;
+	private JXTable table;
 	
 	
 	public FinReportLauncher()	{
@@ -129,7 +132,7 @@ public class FinReportLauncher extends CFrame  implements ICommand, ActionListen
 	
 	private void jbInit()	{
 		Container mainPanel = getContentPane();								
-		mainPanel.setLayout(new MigLayout("", "[grow]", "[][shrink 0]"));
+		mainPanel.setLayout(new MigLayout("", "[grow]", "[][grow]"));
 		// Setup Settings panel			
 		CPanel topPanel = new CPanel(new MigLayout());
 		dateFrom.setMandatory(true);
@@ -144,10 +147,10 @@ public class FinReportLauncher extends CFrame  implements ICommand, ActionListen
 		topPanel.add(dateTo);
 		topPanel.add(reportCombo);
 		topPanel.add(refreshBtn);
-		mainPanel.add(topPanel, "wrap");			
-		detailsPanel = new CPanel();	
-		detailsPanel.setMinimumSize(new Dimension(500, 400));
-		mainPanel.add(detailsPanel, "wrap, growx");
+		mainPanel.add(topPanel, "wrap");
+		
+		table = new JXTable();					
+		mainPanel.add(new JScrollPane(table), "wrap, grow");						
 	}	
 	
 	private void dynInit() {
@@ -155,16 +158,27 @@ public class FinReportLauncher extends CFrame  implements ICommand, ActionListen
 		AccountsTree<Account> tree = AccountsTree.getElementTree(getParameters());			
 		AccountsTree<Account>[] years = (AccountsTree<Account>[]) new AccountsTree<?>[2];
 		years[0] = tree;
-		years[1] = tree;
-		detailsPanel.removeAll();
+		years[1] = tree;		
 		File report;
 		try {
 			report = ResourceFinder.getFile(reportCombo.getValue().toString());
 		} catch (IOException e) {
 			return;
 		}
-		FinReportViewerPanel panel = new FinReportViewerPanel(report, years);	
-		detailsPanel.add(panel ,"wrap, growx");
+		try {
+			FinReportTableModel tableModel = new FinReportTableModel(report, years);
+			tableModel.load();
+			table.setModel(tableModel);
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);		
+			for (TableColumn col: table.getColumns())	{			
+				col.setMinWidth(120);
+			}
+			table.packAll();
+			table.repaint();
+		}catch (IOException e)	{
+			log.log(Level.SEVERE, "Can't load report definition");
+		}	
+		
 		pack();
 		repaint();		
 	}
