@@ -62,10 +62,9 @@ package es.indeos.osx.finreports.client;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -87,6 +86,7 @@ import org.compiere.swing.CLabel;
 import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
+import org.compiere.util.Util;
 import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.opensixen.model.MVFactAcct;
@@ -149,9 +149,9 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 			// Setup Settings panel			
 			CPanel topPanel = new CPanel(new MigLayout());
 			dateFrom.setMandatory(true);
-			dateFrom.setValue(new Timestamp(System.currentTimeMillis()));
+			dateFrom.setValue(Util.firstDayInYear());
 			dateTo.setMandatory(true);
-			dateTo.setValue(new Timestamp(System.currentTimeMillis()));
+			dateTo.setValue(Util.now());
 			refreshBtn.addActionListener(this);
 			
 
@@ -170,24 +170,22 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 			treetable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 			
 			setupColumnsWith();		
-			mainPanel.add(new JScrollPane(treetable), "wrap, growx");
-			
+			mainPanel.add(new JScrollPane(treetable), "wrap, growx");			
 			
 			detailsPanel = new AccountDetailViewerPanel(Env.getCtx());						
 			mainPanel.add(detailsPanel, "wrap, growx");
 		}
-	
-		
-		
+					
 	/**
 	 * 
 	 */
 	private void dynInit() {
+		detailsPanel.clear();
 		// Create treeTable
-		AccountsTree<Account> tree = AccountsTree.getElementTree();
+		AccountsTree<Account> tree = AccountsTree.getElementTree(getParameters());
 		treetable.setTreeTableModel(new AccountTreeTableModel(tree));
 		setupColumnsWith();
-		treetable.repaint();	
+		treetable.repaint();		
 	}
 	
 	/**
@@ -253,10 +251,24 @@ public class GLDashBoard extends CFrame  implements ICommand, ActionListener, Li
 				}
 				buff.append(")");
 				
-				QParam[] params = {new QParam(buff.toString())};
-				detailsPanel.setParams(params);
+				List<QParam> params = new ArrayList<QParam>();
+				params.add(new QParam(buff.toString()));
+				for(QParam p:getParameters())	{
+					params.add(p);
+				}										
+				
+				detailsPanel.setParams(params.toArray(new QParam[params.size()]));
 			}
 		}
-	}	
+	}
+	
+	
+	private QParam[] getParameters()	{
+		QParam[] params = { 
+			new QParam(MFactAcct.COLUMNNAME_AD_Client_ID, Env.getAD_Client_ID(Env.getCtx())),
+			new QParam(MFactAcct.COLUMNNAME_DateAcct + " between '" + dateFrom.getValue() + "' and '" + dateTo.getValue()+"'")				
+		};
+		return params;
+	}
 }
 	

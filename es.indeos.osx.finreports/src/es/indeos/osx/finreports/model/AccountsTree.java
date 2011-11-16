@@ -67,6 +67,7 @@ import java.util.Set;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 import org.jfree.util.Log;
+import org.opensixen.model.QParam;
 import org.python.modules.thread;
 
 /**
@@ -92,9 +93,9 @@ public class AccountsTree <T extends Account> implements Visitable<T> {
      * 
      * 
      */
-	public static AccountsTree<Account> getElementTree()	{
+	public static AccountsTree<Account> getElementTree(QParam[] parameters)	{
 		AccountsTree<Account> forest = new AccountsTree<Account>(null);									
-	    for (Account element : AccountFactory.get()) {
+	    for (Account element : AccountFactory.get(parameters)) {
 	    	forest.child(element);
 	    }
 	    forest.accept(new PrintIndentedVisitor(0));

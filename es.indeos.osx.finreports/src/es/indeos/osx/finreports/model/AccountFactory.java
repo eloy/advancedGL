@@ -71,6 +71,7 @@ import java.util.TreeSet;
 
 import org.opensixen.model.MAccount;
 import org.opensixen.model.MFactAcctBalance;
+import org.opensixen.model.QParam;
 
 /**
  * AccountFactory 
@@ -80,11 +81,11 @@ import org.opensixen.model.MFactAcctBalance;
  */
 public class AccountFactory {
 
-	public static Collection<Account> get()	{
+	public static Collection<Account> get(QParam[] params)	{
 		Date start = new Date();
 		AccountFactory factory = new AccountFactory();
-		factory.load();
-		factory.loadFacts();
+		factory.loadElements();
+		factory.loadFacts(params);
 		long diff = new Date().getTime() - start.getTime();
 		System.out.println("Tiempo empleado: " + diff);
 		
@@ -102,7 +103,7 @@ public class AccountFactory {
 	/**
 	 * Load Accounts 
 	 */
-	private void load()	{		
+	private void loadElements()	{		
 		// Init caches
 		cache = new HashMap<String, Account>();
 		// Load accounts
@@ -123,9 +124,9 @@ public class AccountFactory {
 	/**
 	 * Load facts and insert into account representation
 	 */
-	private void loadFacts()	{
+	private void loadFacts(QParam[] params)	{
 		// and facts	
-		List<MFactAcctBalance> facts = MFactAcctBalance.getFacts();
+		List<MFactAcctBalance> facts = MFactAcctBalance.getFacts(params);
 		for(MFactAcctBalance m_fact:facts)	{
 			String name = getAcctName(m_fact.getAccount_ID());
 			Account acct = cache.get(name);

@@ -62,17 +62,14 @@ package es.indeos.osx.finreports.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.compiere.util.CLogger;
+import org.compiere.util.ValueNamePair;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.opensixen.osgi.ResourceFinder;
-
-import es.indeos.osx.finreports.jasper.Activator;
 
 
 /**
@@ -84,12 +81,14 @@ import es.indeos.osx.finreports.jasper.Activator;
 public class FinReport{
 	private CLogger log = CLogger.getCLogger(getClass());
 	
+	private File report;
 	private AccountsTree<Account>[] trees;	
 	private Set<FinReportLine> reportLines = new  LinkedHashSet<FinReportLine>();
 	
 	public final static String END_OF_REPORT_STRING = "**END**";
 	
-	public FinReport(AccountsTree<Account>[] trees)	{
+	public FinReport(File report, AccountsTree<Account>[] trees)	{
+		this.report = report;
 		this.trees = trees;		
 	}
 	
@@ -99,9 +98,8 @@ public class FinReport{
 	 * @throws  
 	 */
 	public void loadReportDefinition() throws IOException 	{
-		// Load the file.
-		File file = ResourceFinder.getFile("reports/PGC2008_Situacion_PYME.ods");	
-		final Sheet sheet = SpreadSheet.createFromFile(file).getSheet(0);
+		// Load the file.		
+		final Sheet sheet = SpreadSheet.createFromFile(report).getSheet(0);
 		for (int i=0; i < sheet.getRowCount(); i++)	{			
 			String name = sheet.getValueAt(0, i).toString();
 			// If end of string reached
@@ -123,6 +121,23 @@ public class FinReport{
 		return reportLines.toArray(new FinReportLine[reportLines.size()]);
 	}
 
-
+	/**
+	 * Return all reports installed on the system
+	 * TODO Rewrite this stuff
+	 * @return
+	 */
+	public static ValueNamePair[] getavailableReports()	{
+		ValueNamePair[] reports = {
+				new ValueNamePair("reports/PGC2008_C_Resultados_Abreviado.ods", "Cuenta de resultados (abreviado)"),
+				new ValueNamePair("reports/PGC2008_C_Resultados_Normal.ods", "Cuenta de resultados (normal)"),
+				new ValueNamePair("reports/PGC2008_C_Resultados_PYME.ods", "Cuenta de resultados (PYMES)"),
+				new ValueNamePair("reports/PGC2008_Ingresos_Y_Gastos_Abreviado.ods", "Ingresos y gastos (abreviado)"),
+				new ValueNamePair("reports/PGC2008_Ingresos_Y_Gastos_Normal.ods", "Ingresos y gastos (normal)"),
+				new ValueNamePair("reports/PGC2008_Situacion_Abreviado.ods", "Situacion (abreviado)"),
+				new ValueNamePair("reports/PGC2008_Situacion_Normal.ods", "Situacion (normal)"),
+				new ValueNamePair("reports/PGC2008_Situacion_PYME.ods", "Situacion (PYME)")				
+				};				       
+		return reports;
+	}
 	
 }

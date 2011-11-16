@@ -67,13 +67,14 @@ BalanceDataSource ds = new BalanceDataSource();
 result = "ok";
  */
 
-import es.indeos.osx.finreports.model.Account;
-import es.indeos.osx.finreports.model.AccountsTree;
-import es.indeos.osx.finreports.model.FinReport;
+import java.io.File;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
+import es.indeos.osx.finreports.model.Account;
+import es.indeos.osx.finreports.model.AccountsTree;
+import es.indeos.osx.finreports.model.FinReport;
 
 /**
  * BalanceDataSource 
@@ -84,8 +85,8 @@ import net.sf.jasperreports.engine.JRField;
 public class BalanceDataSource extends FinReport implements JRDataSource{
 
 	
-	public BalanceDataSource(AccountsTree<Account>[] trees)	{
-	super(trees);
+	public BalanceDataSource(File report, AccountsTree<Account>[] trees)	{
+	super(report, trees);
 	}
 	
 	/* (non-Javadoc)

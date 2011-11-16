@@ -60,27 +60,36 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.client;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.logging.Level;
 
 import net.miginfocom.swing.MigLayout;
 
 import org.compiere.apps.AEnv;
+import org.compiere.grid.ed.VComboBox;
 import org.compiere.grid.ed.VDate;
+import org.compiere.model.MFactAcct;
 import org.compiere.swing.CButton;
 import org.compiere.swing.CFrame;
 import org.compiere.swing.CLabel;
 import org.compiere.swing.CPanel;
 import org.compiere.util.CLogger;
+import org.compiere.util.Env;
+import org.compiere.util.Util;
+import org.opensixen.model.QParam;
+import org.opensixen.osgi.ResourceFinder;
 import org.opensixen.osgi.interfaces.ICommand;
 
 import es.indeos.osx.finreports.model.Account;
 import es.indeos.osx.finreports.model.AccountsTree;
+import es.indeos.osx.finreports.model.FinReport;
 
 /**
  * FinReportLauncher 
@@ -90,13 +99,11 @@ import es.indeos.osx.finreports.model.AccountsTree;
  */
 public class FinReportLauncher extends CFrame  implements ICommand, ActionListener{
 	private CLogger log = CLogger.getCLogger(getClass());
-
-	private Color colorA = new Color(255, 235, 235);
-	private Color colorB = new Color(255, 253, 253);
-	
+		
 	private VDate dateFrom = new VDate();
 	private VDate dateTo = new VDate();
 	private CButton refreshBtn = new CButton("Recargar");
+	private VComboBox reportCombo = new VComboBox(FinReport.getavailableReports());
 
 	private CPanel detailsPanel;
 	
@@ -126,32 +133,37 @@ public class FinReportLauncher extends CFrame  implements ICommand, ActionListen
 		// Setup Settings panel			
 		CPanel topPanel = new CPanel(new MigLayout());
 		dateFrom.setMandatory(true);
-		dateFrom.setValue(new Timestamp(System.currentTimeMillis()));
+		dateFrom.setValue(Util.firstDayInYear());	
 		dateTo.setMandatory(true);
-		dateTo.setValue(new Timestamp(System.currentTimeMillis()));
+		dateTo.setValue(Util.now());
 		refreshBtn.addActionListener(this);
 		
 		topPanel.add(new CLabel("Fecha inicio"));
 		topPanel.add(dateFrom);
 		topPanel.add(new CLabel("Fecha fin"));
 		topPanel.add(dateTo);
+		topPanel.add(reportCombo);
 		topPanel.add(refreshBtn);
 		mainPanel.add(topPanel, "wrap");			
 		detailsPanel = new CPanel();	
 		detailsPanel.setMinimumSize(new Dimension(500, 400));
 		mainPanel.add(detailsPanel, "wrap, growx");
-	}
-	
+	}	
 	
 	private void dynInit() {
 		// Create treeTable
-		AccountsTree<Account> tree = AccountsTree.getElementTree();			
+		AccountsTree<Account> tree = AccountsTree.getElementTree(getParameters());			
 		AccountsTree<Account>[] years = (AccountsTree<Account>[]) new AccountsTree<?>[2];
 		years[0] = tree;
 		years[1] = tree;
 		detailsPanel.removeAll();
-		FinReportViewerPanel panel = new FinReportViewerPanel(years);
-		panel.setupColumnsWith();
+		File report;
+		try {
+			report = ResourceFinder.getFile(reportCombo.getValue().toString());
+		} catch (IOException e) {
+			return;
+		}
+		FinReportViewerPanel panel = new FinReportViewerPanel(report, years);	
 		detailsPanel.add(panel ,"wrap, growx");
 		pack();
 		repaint();		
@@ -186,4 +198,12 @@ public class FinReportLauncher extends CFrame  implements ICommand, ActionListen
 		}		
 	}
 
+	
+	private QParam[] getParameters()	{
+		QParam[] params = { 
+			new QParam(MFactAcct.COLUMNNAME_AD_Client_ID, Env.getAD_Client_ID(Env.getCtx())),
+			new QParam(MFactAcct.COLUMNNAME_DateAcct + " between '" + dateFrom.getValue() + "' and '" + dateTo.getValue()+"'")				
+		};
+		return params;
+	}
 }

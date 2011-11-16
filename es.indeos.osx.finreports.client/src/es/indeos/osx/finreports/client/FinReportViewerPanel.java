@@ -60,6 +60,7 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.client;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
@@ -70,6 +71,7 @@ import javax.swing.table.TableColumn;
 
 import org.compiere.util.CLogger;
 import org.jdesktop.swingx.JXTable;
+import org.opensixen.model.QParam;
 
 import es.indeos.osx.finreports.model.Account;
 import es.indeos.osx.finreports.model.AccountsTree;
@@ -85,19 +87,21 @@ public class FinReportViewerPanel extends JPanel {
 	private CLogger log = CLogger.getCLogger(getClass());
 	
 	AccountsTree<Account>[] trees;
-
 	private JXTable table;
+	private File report;
 	
-	public FinReportViewerPanel(AccountsTree<Account>[] trees)	{
+	public FinReportViewerPanel(File report, AccountsTree<Account>[] trees)	{
 		super();
-		this.trees = trees;
+		this.report = report;
+		this.trees = trees;	
+		
 		jbInit();
 	}
 	
 	private void jbInit()	{
 		
 		table = new JXTable();
-		FinReportTableModel tableModel = new FinReportTableModel(trees);
+		FinReportTableModel tableModel = new FinReportTableModel(report, trees);
 		try {
 			tableModel.load();
 			table.setModel(tableModel);
@@ -113,10 +117,5 @@ public class FinReportViewerPanel extends JPanel {
 		catch (IOException e)	{
 			log.log(Level.SEVERE, "Can't load report definition");
 		}		
-	}
-	
-	public void setupColumnsWith()	{
-		
-	}
-	
+	}	
 }

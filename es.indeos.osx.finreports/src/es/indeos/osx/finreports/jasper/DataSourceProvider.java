@@ -79,7 +79,7 @@ public class DataSourceProvider implements JRDataSourceProvider{
 	 */
 	@Override
 	public JRDataSource create(JasperReport arg0) throws JRException {		
-		return new BalanceDataSource(null);		
+		return new BalanceDataSource(null, null);		
 	}
 
 	/* (non-Javadoc)

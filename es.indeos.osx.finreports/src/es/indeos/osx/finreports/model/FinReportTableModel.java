@@ -60,12 +60,15 @@
  * ***** END LICENSE BLOCK ***** */
 package es.indeos.osx.finreports.model;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+
 import org.compiere.util.Formater;
+import org.opensixen.model.QParam;
 
 /**
  * FinReportTableModel 
@@ -74,24 +77,24 @@ import org.compiere.util.Formater;
  * Indeos Consultoria http://www.indeos.es
  */
 public class FinReportTableModel implements TableModel {
-
+	private File report;
 	private FinReportLine[] lines;
 	private AccountsTree<Account>[] trees;
 	
 	/**
 	 * @param trees
 	 */
-	public FinReportTableModel(AccountsTree<Account>[] trees) {
+	public FinReportTableModel(File report, AccountsTree<Account>[] trees) {
 		super();
-		this.trees = trees;
-		
+		this.report = report;
+		this.trees = trees;		
 	}
 	
 	
 	public void load() throws IOException	{
-		FinReport report = new FinReport(trees);
-		report.loadReportDefinition();
-		lines = report.getLines();				
+		FinReport finReport = new FinReport(report, trees);
+		finReport.loadReportDefinition();
+		lines = finReport.getLines();				
 	}
 
 	/* (non-Javadoc)

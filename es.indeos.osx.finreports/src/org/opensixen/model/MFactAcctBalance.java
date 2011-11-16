@@ -94,9 +94,7 @@ public class MFactAcctBalance extends X_Fact_Acct_Balance {
 		super(ctx, rs, trxName);
 	}
 
-	public static List<MFactAcctBalance> getFacts()	{
-		int AD_Client_ID = 1000000;
-		QParam[] params = {new QParam(MFactAcctBalance.COLUMNNAME_AD_Client_ID, AD_Client_ID)};
+	public static List<MFactAcctBalance> getFacts(QParam[] params)	{
 		return POFactory.getList(Env.getCtx(),MFactAcctBalance.class, params);
 	}
 		
