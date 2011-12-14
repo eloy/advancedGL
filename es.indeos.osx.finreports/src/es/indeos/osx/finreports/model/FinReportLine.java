@@ -211,7 +211,7 @@ public class FinReportLine {
 					BigDecimal amt = child.getData().getChildsBalance();
 
 					if (a.startsWith("-")) {
-						amt.negate();
+						 amt = amt.negate();
 					}
 					col.setBalance(col.getBalance().add(amt));
 				}
